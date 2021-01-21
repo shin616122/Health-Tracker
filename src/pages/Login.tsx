@@ -57,7 +57,6 @@ export default ((props: any) => {
     }, [history]);
 
     const handleLogin = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
-        console.log(values)
         try {
             await firebase.auth().setPersistence(values.isRememberMe ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION)
             await firebase

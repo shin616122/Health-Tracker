@@ -22,8 +22,8 @@ const Home = (props: any) => {
                 <Grid container style={{ marginTop: '1em' }}>
                     <Grid item md={4}></Grid>
                     <Grid item md={4}>
-                        <Typography>Here is the user's information</Typography>
-                        <Typography
+                        <Typography>ようこそ！Chuma Point!</Typography>
+                        {/* <Typography
                             variant='caption'
                             style={{
                                 paddingTop: '2em',
@@ -32,7 +32,7 @@ const Home = (props: any) => {
                             }}
                         >
                             {currentUser && JSON.stringify(currentUser, null, 4)}
-                        </Typography>
+                        </Typography> */}
                         <Button
                             fullWidth
                             onClick={async event => {
@@ -46,7 +46,7 @@ const Home = (props: any) => {
                             style={{ marginTop: '0.5em', marginBottom: '0.5em' }}
                         >
                             Logout
-            </Button>
+                        </Button>
                     </Grid>
                     <Grid item md={4}></Grid>
                 </Grid>

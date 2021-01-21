@@ -59,7 +59,6 @@ export default ((props: any) => {
     }, [history]);
 
     const handleSignup = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
-        console.log(values)
         try {
             if (values.password !== values.confirmPassword) {
                 formikHelpers.setStatus('Passwords don\'t match.');
