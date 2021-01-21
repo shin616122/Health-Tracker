@@ -17,7 +17,7 @@ function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
-                Chuma Points
+                Chuma
             {' '}
             {new Date().getFullYear()}
             {'.'}
@@ -56,9 +56,10 @@ export default ((props: any) => {
         });
     }, [history]);
 
-    const handleSubmit = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
+    const handleLogin = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
         console.log(values)
         try {
+            await firebase.auth().setPersistence(values.isRememberMe ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION)
             await firebase
                 .auth()
                 .signInWithEmailAndPassword(values.email, values.password)
@@ -92,7 +93,7 @@ export default ((props: any) => {
     return (
         <Formik
             initialValues={{ email: '', password: '', isRememberMe: false }}
-            onSubmit={handleSubmit}>
+            onSubmit={handleLogin}>
             {({ status, isSubmitting }) => (
                 <Container component="main" maxWidth="xs">
                     <CssBaseline />

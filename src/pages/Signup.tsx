@@ -1,16 +1,55 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import useReactRouter from 'use-react-router';
-import { Button, Container, FormControl, Grid, Link, TextField, Typography } from '@material-ui/core';
-
+import { Avatar, Box, Button, CssBaseline, Container, Grid, Typography, FormHelperText, Link } from '@material-ui/core';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { makeStyles } from '@material-ui/core/styles';
 import { firebase } from '../firebase/config';
+import { Field, Formik, Form, FormikHelpers } from 'formik';
+import { TextField } from 'formik-material-ui';
 
-const Signup = (props: any) => {
-    const [fullName, setFullName] = useState('')
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-    const [confirmPassword, setConfirmPassword] = useState('')
+interface FormValues {
+    fullName: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+}
+
+function Copyright() {
+    return (
+        <Typography variant="body2" color="textSecondary" align="center">
+            {'Copyright © '}
+                Chuma
+            {' '}
+            {new Date().getFullYear()}
+            {'.'}
+        </Typography>
+    );
+}
+
+const useStyles = makeStyles((theme) => ({
+    paper: {
+        marginTop: theme.spacing(8),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    avatar: {
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.main,
+    },
+    form: {
+        width: '100%', // Fix IE 11 issue.
+        marginTop: theme.spacing(1),
+    },
+    submit: {
+        margin: theme.spacing(3, 0, 2),
+    },
+}));
+
+export default ((props: any) => {
 
     const { history } = useReactRouter();
+    const classes = useStyles();
 
     useEffect(() => {
         // if logged in, redirect to home
@@ -19,22 +58,23 @@ const Signup = (props: any) => {
         });
     }, [history]);
 
-    const OnSignup = async () => {
+    const handleSignup = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
+        console.log(values)
         try {
-            if (password !== confirmPassword) {
-                alert("Passwords don't match.")
+            if (values.password !== values.confirmPassword) {
+                formikHelpers.setStatus('Passwords don\'t match.');
                 return
             }
             await firebase
                 .auth()
-                .createUserWithEmailAndPassword(email, password)
+                .createUserWithEmailAndPassword(values.email, values.password)
                 .then((response) => {
                     if (response.user) {
                         const uid = response.user.uid
                         const data = {
                             id: uid,
-                            email,
-                            fullName,
+                            email: values.email,
+                            fullName: values.fullName,
                             chumaPoint: 0
                         };
                         const usersRef = firebase.firestore().collection('users')
@@ -50,88 +90,96 @@ const Signup = (props: any) => {
                     }
                 })
         } catch (error) {
-            alert(error.message);
+            formikHelpers.setStatus(error.message);
+            formikHelpers.setSubmitting(false);
         }
     }
 
     return (
-        <Fragment>
-            <Container>
-                <Grid container>
-                    <Grid item md={4}></Grid>
-                    <Grid item md={4}>
-                        <FormControl margin='normal' fullWidth>
-                            <TextField
-                                style={{ marginTop: '0.5em', marginBottom: '0.5em' }}
-                                name='text'
-                                label='Full Name'
+        <Formik
+            initialValues={{ fullName: '', email: '', password: '', confirmPassword: '' }}
+            onSubmit={handleSignup}>
+            {({ status, isSubmitting }) => (
+                <Container component="main" maxWidth="xs">
+                    <CssBaseline />
+                    <div className={classes.paper}>
+                        <Avatar className={classes.avatar}>
+                            <LockOutlinedIcon />
+                        </Avatar>
+                        <Typography component="h1" variant="h5">
+                            Signup
+                    </Typography>
+                        <Form className={classes.form} noValidate>
+                            <FormHelperText error={true}>{status}</ FormHelperText>
+                            <Field
+                                variant="outlined"
+                                margin="normal"
+                                required
                                 fullWidth
-                                variant='outlined'
-                                value={fullName}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                    setFullName(event.target.value);
-                                }}
+                                id="fullName"
+                                label="Full Name"
+                                name="fullName"
+                                autoFocus
+                                component={TextField}
                             />
-                        </FormControl>
-                        <FormControl fullWidth>
-                            <TextField
-                                style={{ marginTop: '0.5em', marginBottom: '0.5em' }}
-                                name='email'
-                                label='E-mail'
+                            <Field
+                                variant="outlined"
+                                margin="normal"
+                                required
                                 fullWidth
-                                variant='outlined'
-                                value={email}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                    setEmail(event.target.value);
-                                }}
+                                id="email"
+                                label="Email Address"
+                                name="email"
+                                autoComplete="email"
+                                autoFocus
+                                component={TextField}
                             />
-                        </FormControl>
-                        <FormControl fullWidth>
-                            <TextField
-                                style={{ marginTop: '0.5em', marginBottom: '0.5em' }}
-                                name='password'
-                                label='Password'
+                            <Field
+                                variant="outlined"
+                                margin="normal"
+                                required
                                 fullWidth
-                                variant='outlined'
-                                type='password'
-                                value={password}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                    setPassword(event.target.value);
-                                }}
+                                name="password"
+                                label="Password"
+                                type="password"
+                                id="password"
+                                component={TextField}
                             />
-                        </FormControl>
-                        <FormControl fullWidth>
-                            <TextField
-                                style={{ marginTop: '0.5em', marginBottom: '0.5em' }}
-                                name='password'
-                                label='Confirm Password'
+                            <Field
+                                variant="outlined"
+                                margin="normal"
+                                required
                                 fullWidth
-                                variant='outlined'
-                                type='password'
-                                value={confirmPassword}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                    setConfirmPassword(event.target.value);
-                                }}
+                                name="confirmPassword"
+                                label="Confirm Password"
+                                type="password"
+                                id="confirmPassword"
+                                component={TextField}
                             />
-                        </FormControl>
-                        <FormControl fullWidth>
                             <Button
+                                type="submit"
                                 fullWidth
-                                onClick={OnSignup}
-                                style={{ marginTop: '0.5em', marginBottom: '0.5em' }}
+                                variant="contained"
+                                color="primary"
+                                disabled={isSubmitting}
+                                className={classes.submit}
                             >
-                                Sign up
+                                Signup
                             </Button>
-                            <Typography align='center'>
-                                <Link href='/login'>to login</Link>
-                            </Typography>
-                        </FormControl>
-                    </Grid>
-                    <Grid item md={4}></Grid>
-                </Grid>
-            </Container>
-        </Fragment>
-    );
-};
-
-export default Signup;
+                            <Grid container>
+                                <Grid item>
+                                    <Link href="/login" variant="body2">
+                                        {"Already have an account? Login"}
+                                    </Link>
+                                </Grid>
+                            </Grid>
+                        </Form>
+                    </div>
+                    <Box mt={8}>
+                        <Copyright />
+                    </Box>
+                </Container>
+            )}
+        </Formik>
+    )
+}) as React.FC;
