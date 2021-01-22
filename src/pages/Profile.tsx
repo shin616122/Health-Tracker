@@ -39,7 +39,9 @@ export default (() => {
                             fullWidth
                             onClick={handleChangeAvatar}
                             style={{ marginTop: '0.5em', marginBottom: '0.5em' }}
-                        />
+                        >
+                            Change Avatar
+                        </Button>
                     </Grid>
                 </Grid>
             </Grid>
