@@ -21,6 +21,7 @@ const Home = (props: any) => {
             <Container>
                 <Grid container style={{ marginTop: '1em' }}>
                     <Grid item md={4}></Grid>
+                    <img src='https://stat.ameba.jp/user_images/20170206/07/shirokuma244/96/99/j/o1600096913862247139.jpg?caw=800' alt='工事中' />
                     <Grid item md={4}>
                         <Typography>ようこそ！Chuma Point!</Typography>
                         {/* <Typography
