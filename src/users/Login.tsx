@@ -5,12 +5,11 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import { firebase } from '../firebase/config';
 import { Field, Formik, Form, FormikHelpers } from 'formik';
-import { TextField, CheckboxWithLabel } from 'formik-material-ui';
+import { TextField } from 'formik-material-ui';
 
 interface FormValues {
     email: string;
     password: string;
-    isRememberMe: boolean;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -22,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     },
     avatar: {
         margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: 'rgba(9, 137, 217, 0.8)',
     },
     form: {
         width: '100%', // Fix IE 11 issue.
@@ -30,6 +29,13 @@ const useStyles = makeStyles((theme) => ({
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
+        background: 'linear-gradient(55deg, #0989D9 10%, #63BDDB 70%)',
+        borderRadius: 30,
+        border: 0,
+        color: 'white',
+        height: 48,
+        padding: '0 30px',
+        boxShadow: '0 3px 5px 2px rgba(67, 120, 138, .3)',
     },
 }));
 
@@ -45,7 +51,6 @@ export default ((props: any) => {
 
     const handleLogin = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
         try {
-            await firebase.auth().setPersistence(values.isRememberMe ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION)
             await firebase
                 .auth()
                 .signInWithEmailAndPassword(values.email, values.password)
@@ -78,7 +83,7 @@ export default ((props: any) => {
 
     return (
         <Formik
-            initialValues={{ email: '', password: '', isRememberMe: false }}
+            initialValues={{ email: '', password: '' }}
             onSubmit={handleLogin}>
             {({ status, isSubmitting }) => (
                 <Container component="main" maxWidth="xs">
@@ -116,12 +121,6 @@ export default ((props: any) => {
                                 autoComplete="current-password"
                                 component={TextField}
                             />
-                            <Field
-                                component={CheckboxWithLabel}
-                                type="checkbox"
-                                name="isRememberMe"
-                                Label={{ label: 'Remember me' }}
-                            />
                             <Button
                                 type="submit"
                                 fullWidth
@@ -143,11 +142,9 @@ export default ((props: any) => {
                     </div>
                     <Box mt={8}>
                         <Typography variant="body2" color="textSecondary" align="center">
-                            {'Copyright © '}
-                            Chuma
-                            {' '}
+                            {`Copyright © Chuma`}
                             {new Date().getFullYear()}
-                            {'.'}
+                            {`.`}
                         </Typography>
                     </Box>
                 </Container>

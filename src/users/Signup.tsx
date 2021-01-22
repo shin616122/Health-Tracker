@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     },
     avatar: {
         margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: 'rgba(9, 137, 217, 0.8)',
     },
     form: {
         width: '100%', // Fix IE 11 issue.
@@ -31,6 +31,13 @@ const useStyles = makeStyles((theme) => ({
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
+        background: 'linear-gradient(55deg, #0989D9 10%, #63BDDB 70%)',
+        borderRadius: 30,
+        border: 0,
+        color: 'white',
+        height: 48,
+        padding: '0 30px',
+        boxShadow: '0 3px 5px 2px rgba(67, 120, 138, .3)',
     },
 }));
 
@@ -116,7 +123,6 @@ export default ((props: any) => {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
-                                autoFocus
                                 component={TextField}
                             />
                             <Field
@@ -162,11 +168,9 @@ export default ((props: any) => {
                     </div>
                     <Box mt={8}>
                         <Typography variant="body2" color="textSecondary" align="center">
-                            {'Copyright © '}
-                            Chuma
-                        {' '}
+                            {`Copyright © Chuma`}
                             {new Date().getFullYear()}
-                            {'.'}
+                            {`.`}
                         </Typography>
                     </Box>
                 </Container>

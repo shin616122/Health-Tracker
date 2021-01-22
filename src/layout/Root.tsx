@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import useReactRouter from 'use-react-router';
 import { Link } from 'react-router-dom';
 import { AppBar, IconButton, MenuItem, Menu, Toolbar, Typography, BottomNavigation, BottomNavigationAction } from '@material-ui/core';
@@ -7,6 +7,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import HomeIcon from '@material-ui/icons/Home';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+import AssessmentIcon from '@material-ui/icons/Assessment';
 import { firebase } from '../firebase/config';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -16,6 +17,9 @@ const useStyles = makeStyles((theme: Theme) =>
             position: 'fixed',
             bottom: 0,
             left: 0,
+        },
+        navbar: {
+            background: 'rgba(20, 153, 196, 1)',
         },
         grow: {
             flexGrow: 1,
@@ -43,19 +47,11 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default ((props: any) => {
-    const [currentUser, setCurrentUser] = useState<null | object>(null);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
-    const [value, setValue] = React.useState('recents');
+    const [value, setValue] = useState('home');
     const classes = useStyles();
     const { history } = useReactRouter();
-
-    // useEffect(() => {
-    //     // if not logged in, redirect to login page
-    //     firebase.auth().onAuthStateChanged(user => {
-    //         user ? setCurrentUser(user) : history.push('/login');
-    //     });
-    // }, [history]);
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -126,7 +122,7 @@ export default ((props: any) => {
 
     return (
         <div className={classes.grow}>
-            <AppBar position="static">
+            <AppBar position="static" className={classes.navbar}>
                 <Toolbar>
                     <IconButton
                         edge="start"
@@ -162,7 +158,7 @@ export default ((props: any) => {
                         >
                             <AccountCircle />
                         </IconButton>
-                        <BottomNavigation value={value} onChange={handleChange} className={classes.root}>
+                        <BottomNavigation value={value} onChange={handleChange} showLabels className={classes.root}>
                             <BottomNavigationAction
                                 component={Link}
                                 to="../pages/home"
@@ -175,8 +171,12 @@ export default ((props: any) => {
                                 label="Bank"
                                 value="bank"
                                 icon={<MonetizationOnIcon />} />
-                            {/* <BottomNavigationAction label="Nearby" value="nearby" icon={3} /> */}
-                            {/* <BottomNavigationAction label="Folder" value="folder" icon={4} /> */}
+                            <BottomNavigationAction
+                                component={Link}
+                                to="../pages/tracker"
+                                label="Tracker"
+                                value="tracker"
+                                icon={<AssessmentIcon />} />
                         </BottomNavigation>
                     </div>
                 </Toolbar>
