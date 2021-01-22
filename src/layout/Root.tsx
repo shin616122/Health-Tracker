@@ -114,7 +114,7 @@ export default ((props: any) => {
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
         >
-            <MenuItem onClick={handleMobileMenuClose} component={Link} to="#">Profile</MenuItem>
+            <MenuItem onClick={handleMobileMenuClose} component={Link} to="../pages/Profile">Profile</MenuItem>
             <MenuItem onClick={handleMobileMenuClose} component={Link} to="#">My account</MenuItem>
             <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
         </Menu>
