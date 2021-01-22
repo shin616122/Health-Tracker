@@ -1,28 +1,17 @@
 import React, { useEffect } from 'react';
 import useReactRouter from 'use-react-router';
-import { Avatar, Box, Button, CssBaseline, Container, Grid, Link, Typography, FormHelperText } from '@material-ui/core';
+import { Avatar, Box, Button, CssBaseline, Container, Grid, Typography, FormHelperText, Link } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import { firebase } from '../firebase/config';
 import { Field, Formik, Form, FormikHelpers } from 'formik';
-import { TextField, CheckboxWithLabel } from 'formik-material-ui';
+import { TextField } from 'formik-material-ui';
 
 interface FormValues {
+    fullName: string;
     email: string;
     password: string;
-    isRememberMe: boolean;
-}
-
-function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-                Chuma
-            {' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
+    confirmPassword: string;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -50,35 +39,37 @@ export default ((props: any) => {
     const classes = useStyles();
 
     useEffect(() => {
-        // if logged in, redirect to home
         firebase.auth().onAuthStateChanged(user => {
-            user && history.push('/');
+            user && history.push('/pages/home');
         });
     }, [history]);
 
-    const handleLogin = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
+    const handleSignup = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
         try {
-            await firebase.auth().setPersistence(values.isRememberMe ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION)
+            if (values.password !== values.confirmPassword) {
+                formikHelpers.setStatus('Passwords don\'t match.');
+                return
+            }
             await firebase
                 .auth()
-                .signInWithEmailAndPassword(values.email, values.password)
+                .createUserWithEmailAndPassword(values.email, values.password)
                 .then((response) => {
                     if (response.user) {
                         const uid = response.user.uid
+                        const data = {
+                            id: uid,
+                            email: values.email,
+                            fullName: values.fullName,
+                            chumaPoint: 0
+                        };
                         const usersRef = firebase.firestore().collection('users')
                         usersRef
                             .doc(uid)
-                            .get()
-                            .then(firestoreDocument => {
-                                if (!firestoreDocument.exists) {
-                                    alert("User does not exist anymore.")
-                                    return;
-                                }
-                                const user = firestoreDocument.data()
-                                console.log(user);
-                                history.push('/');
+                            .set(data)
+                            .then(() => {
+                                history.push('/login');
                             })
-                            .catch(error => {
+                            .catch((error) => {
                                 alert(error)
                             });
                     }
@@ -87,12 +78,12 @@ export default ((props: any) => {
             formikHelpers.setStatus(error.message);
             formikHelpers.setSubmitting(false);
         }
-    };
+    }
 
     return (
         <Formik
-            initialValues={{ email: '', password: '', isRememberMe: false }}
-            onSubmit={handleLogin}>
+            initialValues={{ fullName: '', email: '', password: '', confirmPassword: '' }}
+            onSubmit={handleSignup}>
             {({ status, isSubmitting }) => (
                 <Container component="main" maxWidth="xs">
                     <CssBaseline />
@@ -101,10 +92,21 @@ export default ((props: any) => {
                             <LockOutlinedIcon />
                         </Avatar>
                         <Typography component="h1" variant="h5">
-                            Login
-                        </Typography>
+                            Signup
+                    </Typography>
                         <Form className={classes.form} noValidate>
                             <FormHelperText error={true}>{status}</ FormHelperText>
+                            <Field
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="fullName"
+                                label="Full Name"
+                                name="fullName"
+                                autoFocus
+                                component={TextField}
+                            />
                             <Field
                                 variant="outlined"
                                 margin="normal"
@@ -126,14 +128,18 @@ export default ((props: any) => {
                                 label="Password"
                                 type="password"
                                 id="password"
-                                autoComplete="current-password"
                                 component={TextField}
                             />
                             <Field
-                                component={CheckboxWithLabel}
-                                type="checkbox"
-                                name="isRememberMe"
-                                Label={{ label: 'Remember me' }}
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="confirmPassword"
+                                label="Confirm Password"
+                                type="password"
+                                id="confirmPassword"
+                                component={TextField}
                             />
                             <Button
                                 type="submit"
@@ -143,19 +149,25 @@ export default ((props: any) => {
                                 disabled={isSubmitting}
                                 className={classes.submit}
                             >
-                                Login
+                                Signup
                             </Button>
                             <Grid container>
                                 <Grid item>
-                                    <Link href="/signup" variant="body2">
-                                        {"Don't have an account? Sign Up"}
+                                    <Link href="/login" variant="body2">
+                                        {"Already have an account? Login"}
                                     </Link>
                                 </Grid>
                             </Grid>
                         </Form>
                     </div>
                     <Box mt={8}>
-                        <Copyright />
+                        <Typography variant="body2" color="textSecondary" align="center">
+                            {'Copyright © '}
+                            Chuma
+                        {' '}
+                            {new Date().getFullYear()}
+                            {'.'}
+                        </Typography>
                     </Box>
                 </Container>
             )}

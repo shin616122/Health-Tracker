@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { firebase } from './firebase/config';
 
-//screens
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
+import Index from './pages/Index';
+import Login from './users/Login';
+import Signup from './users/Signup';
 
 const App: React.FC = () => {
 
@@ -43,9 +41,10 @@ const App: React.FC = () => {
     return (
       <Router>
         <Switch>
-          <Route exact path='/' component={Home} />
+          <Route exact path='/' component={Login} />
           <Route exact path='/signup' component={Signup} />
           <Route exact path='/login' component={Login} />
+          <Route path="/pages" component={Index} />
         </Switch>
       </Router>
     );
