@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AppBar, IconButton, MenuItem, Menu, Toolbar, Typography, BottomNavigation, BottomNavigationAction } from '@material-ui/core';
+import { AppBar, IconButton, MenuItem, Menu, NativeSelect, Toolbar, Typography, BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -42,6 +42,12 @@ const useStyles = makeStyles((theme: Theme) =>
                 display: 'none',
             },
         },
+        selector: {
+            color: 'white',
+            "& option": {
+                color: 'rgba(20, 153, 196, 1)',
+            }
+        }
     }),
 );
 
@@ -82,7 +88,11 @@ export default ((props: any) => {
         } catch (error) {
             alert(error.message);
         }
-    }
+    };
+
+    const handleLanguage = async (event: React.ChangeEvent<{ value: unknown }>) => {
+        commonContainer.setLanguage(event.target.value as string)
+    };
 
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
@@ -95,8 +105,8 @@ export default ((props: any) => {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose} component={Link} to="#">Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose} component={Link} to="#">My account</MenuItem>
+            <MenuItem onClick={handleMenuClose} component={Link} to="../pages/Profile">{commonContainer.t('Profile')}</MenuItem>
+            <MenuItem onClick={handleMenuClose} component={Link} to="#">{commonContainer.t('My account')}</MenuItem>
             <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
         </Menu>
     );
@@ -112,9 +122,9 @@ export default ((props: any) => {
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
         >
-            <MenuItem onClick={handleMobileMenuClose} component={Link} to="../pages/Profile">Profile</MenuItem>
-            <MenuItem onClick={handleMobileMenuClose} component={Link} to="#">My account</MenuItem>
-            <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
+            <MenuItem onClick={handleMobileMenuClose} component={Link} to="../pages/Profile">{commonContainer.t('Profile')}</MenuItem>
+            <MenuItem onClick={handleMobileMenuClose} component={Link} to="#">{commonContainer.t('My account')}</MenuItem>
+            <MenuItem onClick={handleSignOut}>{commonContainer.t('SignOut')}</MenuItem>
         </Menu>
     );
 
@@ -131,9 +141,20 @@ export default ((props: any) => {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" noWrap>
-                        CHUMA
+                        {commonContainer.t('CHUMA')}
                     </Typography>
                     <div className={classes.grow} />
+                    <NativeSelect
+                        value={commonContainer.language}
+                        onChange={handleLanguage}
+                        name="language"
+                        className={classes.selector}
+                        inputProps={{ 'aria-label': 'language' }}
+                    >
+                        <option value={'ja'}>日本語</option>
+                        <option value={'en'}>English</option>
+                        <option value={'cm'}>ちゅま</option>
+                    </NativeSelect>
                     <div className={classes.sectionDesktop}>
                         <IconButton
                             edge="end"
@@ -160,19 +181,19 @@ export default ((props: any) => {
                             <BottomNavigationAction
                                 component={Link}
                                 to="../pages/home"
-                                label="Home"
+                                label={`${commonContainer.t('Home')}`}
                                 value="home"
                                 icon={<HomeIcon />} />
                             <BottomNavigationAction
                                 component={Link}
                                 to="../pages/bank"
-                                label="Bank"
+                                label={`${commonContainer.t('Bank')}`}
                                 value="bank"
                                 icon={<MonetizationOnIcon />} />
                             <BottomNavigationAction
                                 component={Link}
                                 to="../pages/tracker"
-                                label="Tracker"
+                                label={`${commonContainer.t('Tracker')}`}
                                 value="tracker"
                                 icon={<AssessmentIcon />} />
                         </BottomNavigation>

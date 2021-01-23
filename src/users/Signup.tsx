@@ -78,8 +78,8 @@ export default ((props: any) => {
                             <LockOutlinedIcon />
                         </Avatar>
                         <Typography component="h1" variant="h5">
-                            Signup
-                    </Typography>
+                            {commonContainer.t('Signup')}
+                        </Typography>
                         <Form className={classes.form} noValidate>
                             <FormHelperText error={true}>{status}</ FormHelperText>
                             <Field
@@ -134,12 +134,12 @@ export default ((props: any) => {
                                 disabled={isSubmitting}
                                 className={classes.submit}
                             >
-                                Signup
+                                {commonContainer.t('Signup')}
                             </Button>
                             <Grid container>
                                 <Grid item>
                                     <Link href="/login" variant="body2">
-                                        {"Already have an account? Login"}
+                                        {commonContainer.t('Already have an account? Login')}
                                     </Link>
                                 </Grid>
                             </Grid>

@@ -1,7 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useReactRouter from 'use-react-router';
 import { createContainer } from 'unstated-next';
 import { firebase } from '../firebase/config';
+import i18n from 'i18next';
+import { initReactI18next, useTranslation } from 'react-i18next';
+
+import enJson from '../locales/en.json';
+import jaJson from '../locales/ja.json';
+import cmJson from '../locales/cm.json'
 
 interface UserModel {
     uid: string;
@@ -10,9 +16,27 @@ interface UserModel {
     chumaPoint: number;
 }
 
+i18n.use(initReactI18next).init({
+    debug: true,
+    resources: {
+        en: { translation: enJson },
+        ja: { translation: jaJson },
+        cm: { translation: cmJson },
+    },
+    lng: 'ja',
+    fallbackLng: false,
+    returnEmptyString: false,
+});
+
 export default createContainer(() => {
     const [user, setUser] = useState<UserModel | undefined>(undefined);
+    const [t, i18n] = useTranslation();
+    const [language, setLanguage] = useState('ja');
     const { history } = useReactRouter();
+
+    useEffect(() => {
+        i18n.changeLanguage(language);
+    }, [language, i18n]);
 
     const loadMe = async () => {
         try {
@@ -108,6 +132,6 @@ export default createContainer(() => {
     };
 
     return {
-        signIn, signUp, signOut, user, loadMe
+        signIn, signUp, signOut, user, loadMe, language, setLanguage, t
     };
 });

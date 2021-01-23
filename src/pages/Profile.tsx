@@ -1,6 +1,7 @@
 import { Avatar, Button, Grid, Typography } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import React, { useEffect, useState } from 'react';
+import CommonContainer from '../containers/Common';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -33,13 +34,14 @@ const handleChangeAvatar = () => {
 
 export default (() => {
     const classes = useStyles();
+    const commonContainer = CommonContainer.useContainer();
 
     return (
         <div style={{ background: "yellow", height: "100vh" }}>
             <Grid item xs={12} className={classes.root}>
                 <Grid container justify="center" direction="column" alignItems="center" spacing={2}>
                     <Grid key={0} item>
-                        <Typography variant="h6" noWrap>Chuma Profile</Typography>
+                        <Typography variant="h6" noWrap>{commonContainer.t('Profile')}</Typography>
                     </Grid>
                     <Grid key={1} item>
                         <Avatar className={classes.avatar} alt="Remy Sharp" src="https://images.assetsdelivery.com/compings_v2/cgdeaw/cgdeaw1904/cgdeaw190400286.jpg" />
@@ -51,7 +53,7 @@ export default (() => {
                             style={{ marginTop: '0.5em', marginBottom: '0.5em' }}
                             className={classes.button}
                         >
-                            Change Avatar
+                            {commonContainer.t('Change Avatar')}
                         </Button>
                     </Grid>
                 </Grid>

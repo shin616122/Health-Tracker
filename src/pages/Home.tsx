@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Container, Grid, Typography } from '@material-ui/core';
-import { firebase } from '../firebase/config';
-
+import CommonContainer from '../containers/Common';
 
 const Root = ((props: any) => {
-    const [currentUser, setCurrentUser] = useState<null | object>(null);
+    const commonContainer = CommonContainer.useContainer();
 
     return (
         <div style={{ background: "red", height: "100vh" }}>
@@ -13,7 +12,7 @@ const Root = ((props: any) => {
                     <Grid item md={4}></Grid>
                     <img src='https://stat.ameba.jp/user_images/20170206/07/shirokuma244/96/99/j/o1600096913862247139.jpg?caw=800' alt='工事中' />
                     <Grid item md={4}>
-                        <Typography>ようこそ！Chuma Point!</Typography>
+                        <Typography>{commonContainer.t('Welcome！Chuma App!')}</Typography>
                     </Grid>
                     <Grid item md={4}></Grid>
                 </Grid>

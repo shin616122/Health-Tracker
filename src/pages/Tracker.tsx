@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import CommonContainer from '../containers/Common';
 
 const Root = (() => {
 
@@ -7,6 +8,7 @@ const Root = (() => {
 
     const [selectedDate, setSelectedDate] = React.useState<Date>(new Date(utc));
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const commonContainer = CommonContainer.useContainer();
 
     useEffect(() => {
         (handleReload)();
@@ -24,7 +26,7 @@ const Root = (() => {
     }
 
     return (
-        <>Chuma Tracker</>
+        <>{commonContainer.t('Chuma Tracker')}</>
     )
 }) as React.FC;
 

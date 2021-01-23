@@ -1,4 +1,4 @@
-import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Grid, IconButton, Typography } from '@material-ui/core';
+import { Card, CardActionArea, CardContent, CardMedia, Grid, IconButton, Typography } from '@material-ui/core';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import CommonContainer from '../containers/Common';
@@ -38,13 +38,13 @@ export default (() => {
                         <CardContent>
                             <Grid container justify="center" alignItems="center">
                                 <Typography variant="h5" component="h2">
-                                    {commonContainer.user && `${commonContainer.user.fullName}'s Chuma Bank!`}
+                                    {commonContainer.user && `${commonContainer.user.fullName}${commonContainer.t('\'s Chuma Bank!')}`}
                                 </Typography>
                             </Grid>
                             <Grid container justify="center" direction="row" alignItems="center" spacing={2}>
                                 <Grid key={0} item>
                                     <Typography variant="body2" color="textSecondary" component="p">
-                                        {commonContainer.user && `${commonContainer.user.chumaPoint} Chuma Points!`}
+                                        {commonContainer.user && `${commonContainer.user.chumaPoint} ${commonContainer.t('Chuma Points!')}`}
                                     </Typography>
                                 </Grid>
                                 <Grid key={1} item>
