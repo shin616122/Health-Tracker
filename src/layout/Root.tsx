@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import useReactRouter from 'use-react-router';
 import { Link } from 'react-router-dom';
 import { AppBar, IconButton, MenuItem, Menu, Toolbar, Typography, BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
@@ -8,7 +7,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import HomeIcon from '@material-ui/icons/Home';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import AssessmentIcon from '@material-ui/icons/Assessment';
-import { firebase } from '../firebase/config';
+import CommonContainer from '../containers/Common';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -51,7 +50,7 @@ export default ((props: any) => {
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
     const [value, setValue] = useState('home');
     const classes = useStyles();
-    const { history } = useReactRouter();
+    const commonContainer = CommonContainer.useContainer();
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -79,8 +78,7 @@ export default ((props: any) => {
 
     const handleSignOut = async () => {
         try {
-            await firebase.auth().signOut();
-            history.push('/login');
+            await commonContainer.signOut();
         } catch (error) {
             alert(error.message);
         }

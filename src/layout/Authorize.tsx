@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import useReactRouter from 'use-react-router';
 import firebase from 'firebase';
+import CommonContainer from '../containers//Common';
 
 export default ((props) => {
-
-    const [currentUser, setCurrentUser] = useState<null | object>(null);
     const { history } = useReactRouter();
+    const commonContainer = CommonContainer.useContainer();
 
     useEffect(() => {
         firebase.auth().onAuthStateChanged(user => {
-            user ? setCurrentUser(user) : history.push('/login');
+            user ? commonContainer.loadMe() : history.push('/login');
         });
-    }, [history]);
+    }, []);
 
     return <>{props.children}</>
 }) as React.FC;

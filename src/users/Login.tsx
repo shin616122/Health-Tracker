@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { firebase } from '../firebase/config';
 import { Field, Formik, Form, FormikHelpers } from 'formik';
 import { TextField } from 'formik-material-ui';
+import CommonContainer from '../containers/Common';
 
 interface FormValues {
     email: string;
@@ -42,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
 export default ((props: any) => {
     const { history } = useReactRouter();
     const classes = useStyles();
+    const commonContainer = CommonContainer.useContainer();
 
     useEffect(() => {
         firebase.auth().onAuthStateChanged(user => {
@@ -49,32 +51,9 @@ export default ((props: any) => {
         });
     }, [history]);
 
-    const handleLogin = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
+    const handleSignIn = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
         try {
-            await firebase
-                .auth()
-                .signInWithEmailAndPassword(values.email, values.password)
-                .then((response) => {
-                    if (response.user) {
-                        const uid = response.user.uid
-                        const usersRef = firebase.firestore().collection('users')
-                        usersRef
-                            .doc(uid)
-                            .get()
-                            .then(firestoreDocument => {
-                                if (!firestoreDocument.exists) {
-                                    alert("User does not exist anymore.")
-                                    return;
-                                }
-                                const user = firestoreDocument.data()
-                                console.log(user);
-                                history.push('/');
-                            })
-                            .catch(error => {
-                                alert(error)
-                            });
-                    }
-                })
+            await commonContainer.signIn(values.email, values.password);
         } catch (error) {
             formikHelpers.setStatus(error.message);
             formikHelpers.setSubmitting(false);
@@ -84,7 +63,7 @@ export default ((props: any) => {
     return (
         <Formik
             initialValues={{ email: '', password: '' }}
-            onSubmit={handleLogin}>
+            onSubmit={handleSignIn}>
             {({ status, isSubmitting }) => (
                 <Container component="main" maxWidth="xs">
                     <CssBaseline />
