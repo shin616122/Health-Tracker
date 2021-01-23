@@ -80,7 +80,6 @@ export default createContainer(() => {
                                     return;
                                 }
                                 const user = firestoreDocument.data()
-                                console.log(user);
                                 setUser(user as UserModel);
                                 history.push('/');
                             })

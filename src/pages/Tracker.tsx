@@ -32,7 +32,7 @@ const Root = (() => {
 
 export default (() => {
     return (
-        <div style={{ background: "green", height: "100vh" }}>
+        <div style={{ background: "green", height: "90vh" }}>
             <Root />
         </div>
     )

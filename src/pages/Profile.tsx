@@ -1,6 +1,6 @@
 import { Avatar, Button, Grid, Typography } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import CommonContainer from '../containers/Common';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -37,7 +37,7 @@ export default (() => {
     const commonContainer = CommonContainer.useContainer();
 
     return (
-        <div style={{ background: "yellow", height: "100vh" }}>
+        <div style={{ background: "yellow", height: "90vh" }}>
             <Grid item xs={12} className={classes.root}>
                 <Grid container justify="center" direction="column" alignItems="center" spacing={2}>
                     <Grid key={0} item>
