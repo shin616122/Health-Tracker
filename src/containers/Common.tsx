@@ -131,6 +131,7 @@ export default createContainer(() => {
     };
 
     return {
-        signIn, signUp, signOut, user, loadMe, language, setLanguage, t
+        signIn, signUp, signOut, user, loadMe,
+        language, setLanguage, t
     };
 });
