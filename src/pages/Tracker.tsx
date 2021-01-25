@@ -1,9 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, IconButton, Typography } from "@material-ui/core";
+import { Button, Grid, IconButton, Typography } from "@material-ui/core";
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import RestaurantIcon from "@material-ui/icons/Restaurant";
 import LocalHotelIcon from '@material-ui/icons/LocalHotel';
 import CommonContainer from '../containers/Common';
+import TrackerContainer from '../containers/Tracker';
+
+interface TrackerRecordModel {
+    bedTime: string;
+    wakeUpTime: string;
+    alcohol: boolean;
+    foodRecords: FoodRecordModel[];
+    createdDate: string
+}
+
+interface FoodRecordModel {
+    recordDate: string,
+    mealType: number,
+    images: string[],
+}
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -34,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
                 backgroundColor: "#FF8400"
             }
         },
-        sleepButton: {
+        bedTimeButton: {
             // top: `calc(50% - 35px)`,
             // left: `calc(50% - 35px)`,
             width: "70px",
@@ -48,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) =>
                 backgroundColor: "#FFC421"
             }
         },
-        wakebutton: {
+        wakeUpButton: {
             // top: `calc(50% - 35px)`,
             // left: `calc(50% - 35px)`,
             width: "70px",
@@ -113,7 +128,16 @@ const useStyles = makeStyles((theme: Theme) =>
             left: "0",
             backgroundClip: "border-box",
             overflow: "hidden"
-        }
+        }, foodButton: {
+            margin: theme.spacing(3, 0, 2),
+            background: '#fff',
+            borderRadius: 30,
+            border: 0,
+            color: '#5998AB',
+            height: 48,
+            padding: '0 30px',
+            boxShadow: '0 3px 5px 2px rgba(67, 120, 138, .3)',
+        },
     })
 );
 
@@ -122,34 +146,41 @@ const Root = (() => {
     const now = new Date();
     const utc = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
 
-    const [selectedDate, setSelectedDate] = React.useState<Date>(new Date(utc));
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const commonContainer = CommonContainer.useContainer();
-    // const [today, setDate] = useState(new Date());
+    const trackerContainer = TrackerContainer.useContainer();
 
     const classes = useStyles();
     const left = "-35px";
     const top = "-185px";
 
-    useEffect(() => {
-        // const timer = setInterval(() => { // Creates an interval which will update the current data every minute
-        //     // This will trigger a rerender every component that uses the useDate hook.
-        //     setDate(new Date());
-        // }, 60 * 1000);
-        // return () => {
-        //     clearInterval(timer); // Return a funtion to clear the timer so that it will stop being called on unmount
-        // }
-        (handleReload)();
-    }, [selectedDate]);
-
-    const handleSelectedDateChange = (date: Date | null) => {
-        if (date) {
-            setSelectedDate(date);
-        }
-    };
-
-    const handleReload = async () => {
+    const handleBedTime = async () => {
         setIsLoading(true);
+        console.log(now);
+        console.log(new Date(utc));
+        let data = {
+            'bedTime': new Date().toISOString(),
+            'wakeUpTime': '',
+            'alcohol': false,
+            'foodRecords': [],
+            'createdDate': new Date().toISOString().substr(0, 10),
+        };
+        // await trackerContainer.createSleepRecord(data as TrackerRecordModel);
+        setIsLoading(false);
+    }
+
+    const handleWakeUpTime = async () => {
+        setIsLoading(true);
+        console.log(now);
+        console.log(new Date(utc));
+        let data = {
+            'bedTime': new Date().toISOString(),
+            'wakeUpTime': '',
+            'alcohol': false,
+            'foodRecords': [],
+            'createdDate': new Date().toISOString().substr(0, 10),
+        };
+        // await trackerContainer.createSleepRecord(data as TrackerRecordModel);
         setIsLoading(false);
     }
 
@@ -173,7 +204,7 @@ const Root = (() => {
                         <div className={classes.donutDefault}></div>
                         <div className={classes.donutLine}></div>
                         <div className={classes.donutText}>
-                            <Typography variant="h4" component={'h2'} style={{ color: '#5998ab' }}>
+                            <Typography variant="h4" component={'h2'} style={{ color: '#5998AB' }}>
                                 {now.toLocaleTimeString()}
                             </Typography>
                         </div>
@@ -185,21 +216,42 @@ const Root = (() => {
                         <Grid key={0} item>
                             <IconButton
                                 aria-label="wake"
-                                className={classes.sleepButton}
+                                className={classes.wakeUpButton}
+                                onClick={handleWakeUpTime}
                             >
-                                <LocalHotelIcon fontSize="large" />
-                                Wake Time
+                                <div>
+                                    <LocalHotelIcon fontSize="large" />
+                                    <Typography variant="body1" component={'p'}>
+                                        {commonContainer.t('Wake up Time')}
+                                    </Typography>
+                                </div>
                             </IconButton>
                         </Grid>
                         <Grid key={1} item>
                             <IconButton
                                 aria-label="sleep"
-                                className={classes.wakebutton}
+                                className={classes.bedTimeButton}
+                                onClick={handleBedTime}
                             >
-                                <LocalHotelIcon fontSize="large" />
-                                Sleep Time
+                                <div>
+                                    <LocalHotelIcon fontSize="large" />
+                                    <Typography variant="body1" component={'p'}>
+                                        {commonContainer.t('Bed Time')}
+                                    </Typography>
+                                </div>
                             </IconButton>
                         </Grid>
+                    </Grid>
+                    <Grid key={3} item>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            className={classes.foodButton}
+                        >
+                            {commonContainer.t('Record Food')}
+                        </Button>
                     </Grid>
                 </Grid>
             </Grid>

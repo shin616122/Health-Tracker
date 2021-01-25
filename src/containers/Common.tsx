@@ -101,6 +101,7 @@ export default createContainer(() => {
                 .then((response) => {
                     if (response.user) {
                         const uid = response.user.uid
+                        const today = new Date().toISOString();
                         const data = {
                             id: uid,
                             email,
@@ -125,9 +126,13 @@ export default createContainer(() => {
     };
 
     const signOut = async () => {
-        await firebase.auth().signOut();
-        setUser(undefined);
-        history.push('/login');
+        try {
+            await firebase.auth().signOut();
+            setUser(undefined);
+            history.push('/login');
+        } catch (err) {
+            throw err;
+        }
     };
 
     return {
