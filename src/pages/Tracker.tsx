@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Grid, IconButton, Typography } from "@material-ui/core";
+import { Button, Card, CardContent, Grid, IconButton, Typography } from "@material-ui/core";
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import RestaurantIcon from "@material-ui/icons/Restaurant";
-import LocalHotelIcon from '@material-ui/icons/LocalHotel';
 import CommonContainer from '../containers/Common';
 import TrackerContainer from '../containers/Tracker';
+import DateTimeLabel from '../components/Labels/DateTimeLabel'
+import SleepButton from '../components/Inputs/SleepButton';
 
 interface TrackerRecordModel {
     bedTime: string;
@@ -13,6 +14,7 @@ interface TrackerRecordModel {
     foodRecords: FoodRecordModel[];
     createdDate: string
 }
+
 
 interface FoodRecordModel {
     recordDate: string,
@@ -49,32 +51,43 @@ const useStyles = makeStyles((theme: Theme) =>
                 backgroundColor: "#FF8400"
             }
         },
+        mealIconButton: {
+            position: "absolute",
+            left: "5px",
+            width: "35px",
+            height: "35px",
+            display: "flex",
+            borderRadius: '50%',
+            zIndex: 4,
+            color: "white",
+            fontSize: "10px",
+            backgroundColor: "#FF8400",
+            "&:hover": {
+                backgroundColor: "#FF8400"
+            }
+        },
         bedTimeButton: {
-            // top: `calc(50% - 35px)`,
-            // left: `calc(50% - 35px)`,
-            width: "70px",
-            height: "70px",
+            left: "40px",
+            width: "90px",
+            height: "90px",
             display: "flex",
             cursor: "pointer",
-            // zIndex: 4,
             color: "#FF8400",
-            backgroundColor: "#FFC421",
+            backgroundColor: "#FFF",
             "&:hover": {
-                backgroundColor: "#FFC421"
+                backgroundColor: "#FFF"
             }
         },
         wakeUpButton: {
-            // top: `calc(50% - 35px)`,
-            // left: `calc(50% - 35px)`,
-            width: "70px",
-            height: "70px",
+            left: '-40px',
+            width: "90px",
+            height: "90px",
             display: "flex",
             cursor: "pointer",
-            // zIndex: 4,
             color: "#FF8400",
-            backgroundColor: "#FFC421",
+            backgroundColor: "#FFF",
             "&:hover": {
-                backgroundColor: "#FFC421"
+                backgroundColor: "#FFF"
             }
         },
         donut: {
@@ -128,7 +141,8 @@ const useStyles = makeStyles((theme: Theme) =>
             left: "0",
             backgroundClip: "border-box",
             overflow: "hidden"
-        }, foodButton: {
+        },
+        mealButton: {
             margin: theme.spacing(3, 0, 2),
             background: '#fff',
             borderRadius: 30,
@@ -136,17 +150,22 @@ const useStyles = makeStyles((theme: Theme) =>
             color: '#5998AB',
             height: 48,
             padding: '0 30px',
-            boxShadow: '0 3px 5px 2px rgba(67, 120, 138, .3)',
+            // boxShadow: '0 3px 5px 2px rgba(67, 120, 138, .3)',
+        },
+        cardRoot: {
+            // minWidth: 275,
+            // width: '100%'
+        },
+        title: {
+            fontSize: 14,
         },
     })
 );
 
 const Root = (() => {
 
-    const now = new Date();
-    const utc = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
-
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [now, setNow] = useState<Date>(new Date());
     const commonContainer = CommonContainer.useContainer();
     const trackerContainer = TrackerContainer.useContainer();
 
@@ -154,41 +173,19 @@ const Root = (() => {
     const left = "-35px";
     const top = "-185px";
 
-    const handleBedTime = async () => {
-        setIsLoading(true);
-        console.log(now);
-        console.log(new Date(utc));
-        let data = {
-            'bedTime': new Date().toISOString(),
-            'wakeUpTime': '',
-            'alcohol': false,
-            'foodRecords': [],
-            'createdDate': new Date().toISOString().substr(0, 10),
-        };
-        // await trackerContainer.createSleepRecord(data as TrackerRecordModel);
-        setIsLoading(false);
-    }
-
-    const handleWakeUpTime = async () => {
-        setIsLoading(true);
-        console.log(now);
-        console.log(new Date(utc));
-        let data = {
-            'bedTime': new Date().toISOString(),
-            'wakeUpTime': '',
-            'alcohol': false,
-            'foodRecords': [],
-            'createdDate': new Date().toISOString().substr(0, 10),
-        };
-        // await trackerContainer.createSleepRecord(data as TrackerRecordModel);
-        setIsLoading(false);
-    }
+    useEffect(() => {
+        (async function fetchData() {
+            setIsLoading(true);
+            await trackerContainer.getTrackerRecord(now);
+            setIsLoading(false)
+        })()
+    }, [now]);
 
     return (
         <Grid item xs={12} className={classes.root}>
             <Grid container justify="center" direction="column" alignItems="center" spacing={2}>
                 <Grid key={0} item>
-                    <Typography variant="h6" component={'h2'} style={{ paddingTop: '10px', color: 'white' }}>
+                    <Typography variant="h6" component={'h1'} style={{ paddingTop: '10px', color: 'white' }}>
                         {commonContainer.t('Chuma Tracker')}
                     </Typography>
                 </Grid>
@@ -204,54 +201,53 @@ const Root = (() => {
                         <div className={classes.donutDefault}></div>
                         <div className={classes.donutLine}></div>
                         <div className={classes.donutText}>
-                            <Typography variant="h4" component={'h2'} style={{ color: '#5998AB' }}>
-                                {now.toLocaleTimeString()}
-                            </Typography>
+                            <DateTimeLabel />
                         </div>
                         <div className={classes.donutCase}></div>
                     </div>
                 </Grid>
                 <Grid key={2} item>
-                    <Grid container justify="space-between" direction="row" alignItems="center" spacing={10}>
-                        <Grid key={0} item>
-                            <IconButton
-                                aria-label="wake"
-                                className={classes.wakeUpButton}
-                                onClick={handleWakeUpTime}
-                            >
-                                <div>
-                                    <LocalHotelIcon fontSize="large" />
-                                    <Typography variant="body1" component={'p'}>
-                                        {commonContainer.t('Wake up Time')}
-                                    </Typography>
-                                </div>
-                            </IconButton>
-                        </Grid>
-                        <Grid key={1} item>
-                            <IconButton
-                                aria-label="sleep"
-                                className={classes.bedTimeButton}
-                                onClick={handleBedTime}
-                            >
-                                <div>
-                                    <LocalHotelIcon fontSize="large" />
-                                    <Typography variant="body1" component={'p'}>
-                                        {commonContainer.t('Bed Time')}
-                                    </Typography>
-                                </div>
-                            </IconButton>
-                        </Grid>
-                    </Grid>
+                    <SleepButton now={now} isLoading={isLoading} />
                     <Grid key={3} item>
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
                             color="primary"
-                            className={classes.foodButton}
+                            className={classes.mealButton}
                         >
-                            {commonContainer.t('Record Food')}
+                            <RestaurantIcon className={classes.mealIconButton} />
+                            <Typography style={{ color: '#000' }} variant="h6" component={'h1'}>
+                                {commonContainer.t('Record Meal')}
+                            </Typography>
                         </Button>
+                    </Grid>
+                </Grid>
+                <Grid key={3} item>
+                    <Grid container justify="space-between" direction="row" alignItems="stretch" spacing={0}>
+                        <Grid key={0} item>
+                            <Card className={classes.cardRoot}>
+                                <CardContent>
+                                    <Typography className={classes.title} color="textSecondary">
+                                        {commonContainer.t('First Meal')}
+                                    </Typography>
+                                    <Typography color="textSecondary" gutterBottom>
+                                        4:15
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid><Grid key={1} item>
+                            <Card className={classes.cardRoot}>
+                                <CardContent>
+                                    <Typography className={classes.title} color="textSecondary">
+                                        {commonContainer.t('Recent Meal')}
+                                    </Typography>
+                                    <Typography color="textSecondary" gutterBottom>
+                                        10:15
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
                     </Grid>
                 </Grid>
             </Grid>

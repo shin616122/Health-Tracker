@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import useReactRouter from 'use-react-router';
 import firebase from 'firebase';
 import CommonContainer from '../containers//Common';
