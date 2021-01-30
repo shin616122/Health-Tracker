@@ -101,7 +101,6 @@ export default createContainer(() => {
                 .then((response) => {
                     if (response.user) {
                         const uid = response.user.uid
-                        // const today = new Date().toISOString();
                         const data = {
                             id: uid,
                             email,

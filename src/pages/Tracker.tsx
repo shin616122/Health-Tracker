@@ -1,25 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, CardContent, Grid, IconButton, Typography } from "@material-ui/core";
+import { Grid, IconButton, Typography } from "@material-ui/core";
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import RestaurantIcon from "@material-ui/icons/Restaurant";
 import CommonContainer from '../containers/Common';
 import TrackerContainer from '../containers/Tracker';
 import DateTimeLabel from '../components/Labels/DateTimeLabel'
 import SleepButton from '../components/Inputs/SleepButton';
+import MealLabel from '../components/Labels/MealLabel';
 
 interface TrackerRecordModel {
     bedTime: string;
     wakeUpTime: string;
     alcohol: boolean;
-    foodRecords: FoodRecordModel[];
+    meals: MealRecordModel[];
     createdDate: string
 }
 
-
-interface FoodRecordModel {
-    recordDate: string,
+interface MealRecordModel {
+    recordDateTime: string,
     mealType: number,
-    images: string[],
+    images: string,
+}
+
+interface SleepRecordModel {
+    recordDateTime: Date;
+    recordType: number;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -64,30 +69,6 @@ const useStyles = makeStyles((theme: Theme) =>
             backgroundColor: "#FF8400",
             "&:hover": {
                 backgroundColor: "#FF8400"
-            }
-        },
-        bedTimeButton: {
-            left: "40px",
-            width: "90px",
-            height: "90px",
-            display: "flex",
-            cursor: "pointer",
-            color: "#FF8400",
-            backgroundColor: "#FFF",
-            "&:hover": {
-                backgroundColor: "#FFF"
-            }
-        },
-        wakeUpButton: {
-            left: '-40px',
-            width: "90px",
-            height: "90px",
-            display: "flex",
-            cursor: "pointer",
-            color: "#FF8400",
-            backgroundColor: "#FFF",
-            "&:hover": {
-                backgroundColor: "#FFF"
             }
         },
         donut: {
@@ -149,21 +130,13 @@ const useStyles = makeStyles((theme: Theme) =>
             border: 0,
             color: '#5998AB',
             height: 48,
+            width: 280,
             padding: '0 30px',
-            // boxShadow: '0 3px 5px 2px rgba(67, 120, 138, .3)',
-        },
-        cardRoot: {
-            // minWidth: 275,
-            // width: '100%'
-        },
-        title: {
-            fontSize: 14,
         },
     })
 );
 
 const Root = (() => {
-
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [now, setNow] = useState<Date>(new Date());
     const commonContainer = CommonContainer.useContainer();
@@ -174,12 +147,32 @@ const Root = (() => {
     const top = "-185px";
 
     useEffect(() => {
-        (async function fetchData() {
+        (async () => {
             setIsLoading(true);
             await trackerContainer.getTrackerRecord(now);
             setIsLoading(false)
         })()
-    }, [now]);
+    }, []);
+
+    const handleAddMeal = async () => {
+        setNow(new Date());
+        let data = {
+            recordDateTime: now.toISOString(),
+            mealType: 0,
+            images: 'url',
+        }
+        await trackerContainer.createOrUpdateMealRecord(now, data as MealRecordModel);
+    }
+
+    const handleSleepTime = async (recordType: number) => {
+        setNow(new Date());
+        let data = {
+            'recordDateTime': now,
+            'recordType': recordType,
+        };
+        await trackerContainer.createSleepRecord(data as SleepRecordModel);
+        await trackerContainer.getTrackerRecord(now);
+    }
 
     return (
         <Grid item xs={12} className={classes.root}>
@@ -207,51 +200,25 @@ const Root = (() => {
                     </div>
                 </Grid>
                 <Grid key={2} item>
-                    <SleepButton now={now} isLoading={isLoading} />
-                    <Grid key={3} item>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            className={classes.mealButton}
-                        >
-                            <RestaurantIcon className={classes.mealIconButton} />
-                            <Typography style={{ color: '#000' }} variant="h6" component={'h1'}>
-                                {commonContainer.t('Record Meal')}
-                            </Typography>
-                        </Button>
-                    </Grid>
+                    <SleepButton handleSleepTime={handleSleepTime} isLoading={isLoading} />
                 </Grid>
                 <Grid key={3} item>
-                    <Grid container justify="space-between" direction="row" alignItems="stretch" spacing={0}>
-                        <Grid key={0} item>
-                            <Card className={classes.cardRoot}>
-                                <CardContent>
-                                    <Typography className={classes.title} color="textSecondary">
-                                        {commonContainer.t('First Meal')}
-                                    </Typography>
-                                    <Typography color="textSecondary" gutterBottom>
-                                        4:15
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid><Grid key={1} item>
-                            <Card className={classes.cardRoot}>
-                                <CardContent>
-                                    <Typography className={classes.title} color="textSecondary">
-                                        {commonContainer.t('Recent Meal')}
-                                    </Typography>
-                                    <Typography color="textSecondary" gutterBottom>
-                                        10:15
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    </Grid>
+                    <IconButton
+                        aria-label="addMeal"
+                        className={classes.mealButton}
+                        onClick={handleAddMeal}
+                    >
+                        <RestaurantIcon className={classes.mealIconButton} />
+                        <Typography style={{ color: '#000' }} variant="h6" component={'h1'}>
+                            {commonContainer.t('Record Meal')}
+                        </Typography>
+                    </IconButton>
+                </Grid>
+                <Grid key={4} item>
+                    <MealLabel />
                 </Grid>
             </Grid>
-        </Grid>
+        </Grid >
     )
 }) as React.FC;
 

@@ -14,8 +14,8 @@ export default (() => {
     const { match } = useReactRouter();
 
     return (
-        <Authorize>
-            <TrackerContainer.Provider>
+        <TrackerContainer.Provider>
+            <Authorize>
                 <Layout />
                 <Switch>
                     <Route path={`${match.url}/home`} component={Home} />
@@ -23,7 +23,7 @@ export default (() => {
                     <Route path={`${match.url}/tracker`} component={Tracker} />
                     <Route path={`${match.url}/profile`} component={Profile} />
                 </Switch>
-            </TrackerContainer.Provider>
-        </Authorize>
+            </Authorize>
+        </TrackerContainer.Provider>
     )
 }) as React.FC;

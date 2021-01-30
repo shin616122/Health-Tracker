@@ -7,20 +7,19 @@ interface TrackerRecordModel {
     bedTime: string;
     wakeUpTime: string;
     alcohol: boolean;
-    foodRecords: FoodRecordModel[];
+    meals: MealRecordModel[];
     createdDate: string
 }
 
-interface FoodRecordModel {
-    recordDate: string,
+interface MealRecordModel {
+    recordDateTime: string,
     mealType: number,
-    images: string[],
+    images: string,
 }
 
 interface SleepRecordModel {
     recordDateTime: Date;
     recordType: number;
-    // createdDate: string
 }
 
 export default createContainer(() => {
@@ -28,47 +27,59 @@ export default createContainer(() => {
     const [trackerRecord, setTrackerRecord] = useState<TrackerRecordModel | undefined>(undefined);
     const [bedTime, setBedTime] = useState<Date | undefined>(undefined);
     const [wakeUpTime, setWakeUpTime] = useState<Date | undefined>(undefined);
+    const [meals, setMeals] = useState<MealRecordModel[]>([]);
 
     const createSleepRecord = async (sleepRecord: SleepRecordModel) => {
         try {
             firebase.auth().onAuthStateChanged(async user => {
+                let trackerRecordData: TrackerRecordModel | undefined = undefined;
                 if (user) {
-                    const trackerRecordsRef = firebase.firestore()
+                    const trackerRecordRef = firebase.firestore()
                         .collection('users').doc(user.uid)
-                        .collection('trackerRecords');
+                        .collection('trackerRecords').doc(sleepRecord.recordDateTime.toISOString().substr(0, 10));
 
-                    let queryKey = '';
-
+                    let key = '';
                     switch (sleepRecord.recordType) {
                         case 0:
-                            queryKey = 'bedTime';
+                            key = 'bedTime';
                             break;
                         case 1:
-                            queryKey = 'wakeUpTime';
+                            key = 'wakeUpTime';
                             break;
-
                         default:
-                            queryKey = '';
+                            console.error('CreateSleepRecord key error.')
                             break;
                     }
-                    console.log(sleepRecord.recordType);
-                    let snapshot = await trackerRecordsRef.where(queryKey, '==', '').get();
-                    console.log(snapshot.empty);
 
-                    if (snapshot.empty) {
-                        let data = {
-                            [queryKey]: sleepRecord.recordDateTime.toISOString()
-                        }
-                        trackerRecordsRef
-                            .doc(sleepRecord.recordDateTime.toISOString().substr(0, 10))
-                            .set(data, { merge: true })
-                            .then(() => {
-                                // history.push('/login');
-                            })
-                            .catch((error) => {
-                                alert(error);
-                            });
-                    }
+                    trackerRecordRef
+                        .get()
+                        .then(async (document) => {
+                            trackerRecordData = document.data() as TrackerRecordModel;
+                            if (!trackerRecordData) {
+                                await trackerRecordRef.set({ [key]: sleepRecord.recordDateTime.toISOString() }, { merge: true });
+                            }
+                            else {
+                                if (!trackerRecordData.bedTime && sleepRecord.recordType === 0) {
+                                    trackerRecordRef
+                                        .set({ 'bedTime': sleepRecord.recordDateTime.toISOString() }, { merge: true })
+                                        .catch((error) => {
+                                            alert(error);
+                                        })
+                                }
+
+                                if (!trackerRecordData.wakeUpTime && sleepRecord.recordType === 1) {
+                                    trackerRecordRef
+                                        .set({ 'wakeUpTime': sleepRecord.recordDateTime.toISOString() }, { merge: true })
+                                        .catch((error) => {
+                                            alert(error);
+                                        })
+                                }
+                            }
+
+                        })
+                        .finally(() => {
+                            setTrackerRecord(trackerRecordData as TrackerRecordModel);
+                        })
                 }
             })
         } catch (err) {
@@ -78,29 +89,69 @@ export default createContainer(() => {
         }
     }
 
+    const createOrUpdateMealRecord = async (recordDate: Date, data: MealRecordModel) => {
+        try {
+            firebase.auth().onAuthStateChanged(async user => {
+                let trackerRecordData: TrackerRecordModel | undefined = undefined;
+                if (user) {
+                    const trackerRecordRef = firebase.firestore()
+                        .collection('users').doc(user.uid)
+                        .collection('trackerRecords').doc(recordDate.toISOString().substr(0, 10));
+
+                    trackerRecordRef
+                        .get()
+                        .then((document) => {
+                            trackerRecordData = document.data() as TrackerRecordModel;
+                            if (!trackerRecordData) {
+                                trackerRecordRef.set({})
+                            }
+                        })
+                        .then(() => {
+                            trackerRecordRef
+                                .update({ meals: firebase.firestore.FieldValue.arrayUnion(data) })
+                                .then(() => {
+                                    console.log('createMealRecord - Added To firestore')
+                                })
+                                .catch((error) => {
+                                    alert(error);
+                                });
+                        })
+                        .finally(() => {
+                            setTrackerRecord(trackerRecordData as TrackerRecordModel);
+                        })
+                }
+            })
+        } catch (err) {
+            if (err.status === 401) {
+                history.push('/login');
+            }
+        }
+    };
+
+
     const getTrackerRecord = async (today: Date) => {
         try {
             firebase.auth().onAuthStateChanged(async user => {
                 if (user) {
-                    const trackerRecordsRef = firebase.firestore()
+                    const trackerRecordRef = firebase.firestore()
                         .collection('users').doc(user.uid)
                         .collection('trackerRecords').doc(today.toISOString().substr(0, 10));
 
-                    trackerRecordsRef
+                    trackerRecordRef
                         .get()
                         .then((document) => {
-                            // history.push('/login');
-                            console.log(document.data())
                             const trackerRecordData = document.data()
                             setTrackerRecord(trackerRecordData as TrackerRecordModel)
 
-                            if (trackerRecord) {
-                                if (trackerRecord.wakeUpTime) {
-                                    setWakeUpTime(new Date(trackerRecord.wakeUpTime));
+                            if (trackerRecordData) {
+                                if (trackerRecordData.wakeUpTime) {
+                                    setWakeUpTime(new Date(trackerRecordData.wakeUpTime));
                                 }
-                                if (trackerRecord.bedTime) {
-
-                                    setBedTime(new Date(trackerRecord.bedTime));
+                                if (trackerRecordData.bedTime) {
+                                    setBedTime(new Date(trackerRecordData.bedTime));
+                                }
+                                if (trackerRecordData.meals) {
+                                    setMeals(trackerRecordData.meals);
                                 }
                             }
                         })
@@ -117,6 +168,7 @@ export default createContainer(() => {
     }
 
     return {
-        createSleepRecord, getTrackerRecord, trackerRecord, wakeUpTime, bedTime
+        createSleepRecord, getTrackerRecord, trackerRecord, wakeUpTime, bedTime,
+        createOrUpdateMealRecord, meals
     };
 });

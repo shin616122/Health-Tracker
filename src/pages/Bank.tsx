@@ -9,7 +9,7 @@ const useStyles = makeStyles({
         paddingTop: 20
     },
     card: {
-        maxWidth: 345,
+        maxWidth: 300,
     },
 });
 
@@ -23,7 +23,7 @@ export default (() => {
 
     return (
         <div className={classes.root}>
-            <Grid container justify="center" direction="column" alignItems="center" spacing={2}>
+            <Grid container justify="center" direction="column" alignItems="center">
                 <Grid key={0} item>
                     <Card className={classes.card}>
                         <CardActionArea>

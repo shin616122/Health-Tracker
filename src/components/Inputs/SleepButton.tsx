@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Grid, Typography, IconButton } from "@material-ui/core";
 import LocalHotelIcon from '@material-ui/icons/LocalHotel';
 import CommonContainer from '../../containers/Common';
@@ -7,13 +7,7 @@ import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 
 interface Props {
     isLoading: boolean,
-    now: Date
-}
-
-interface SleepRecordModel {
-    recordDateTime: Date;
-    recordType: number;
-    // createdDate: string
+    handleSleepTime: (recordType: number) => void
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -56,25 +50,13 @@ export default ((props) => {
         hour12: false
     };
 
-    const handleSleepTime = async (recordType: number) => {
-        let data = {
-            'recordDateTime': props.now,
-            'recordType': recordType,
-            // 'alcohol': false,
-            // 'foodRecords': [],
-            // 'createdDate': now.toISOString().substr(0, 10),
-        };
-        await trackerContainer.createSleepRecord(data as SleepRecordModel);
-        await trackerContainer.getTrackerRecord(props.now);
-    }
-
     return (
         <Grid container justify="space-between" direction="row" alignItems="center" spacing={10}>
             <Grid key={0} item>
                 <IconButton
                     aria-label="wake"
                     className={classes.wakeUpButton}
-                    onClick={() => { handleSleepTime(1) }}
+                    onClick={() => props.handleSleepTime(1)}
                 >
                     <div>
                         <LocalHotelIcon fontSize="large" style={{ color: '#5998AB' }} />
@@ -91,7 +73,7 @@ export default ((props) => {
                 <IconButton
                     aria-label="sleep"
                     className={classes.bedTimeButton}
-                    onClick={() => { handleSleepTime(0) }}
+                    onClick={() => props.handleSleepTime(0)}
                 >
                     <div>
                         <LocalHotelIcon fontSize="large" style={{ color: '#5998AB' }} />
