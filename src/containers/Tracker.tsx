@@ -14,7 +14,7 @@ interface TrackerRecordModel {
 interface MealRecordModel {
     recordDateTime: string,
     mealType: number,
-    images: string,
+    image: string,
 }
 
 interface SleepRecordModel {
@@ -41,10 +41,10 @@ export default createContainer(() => {
                     let key = '';
                     switch (sleepRecord.recordType) {
                         case 0:
-                            key = 'bedTime';
+                            key = 'wakeUpTime';
                             break;
                         case 1:
-                            key = 'wakeUpTime';
+                            key = 'bedTime';
                             break;
                         default:
                             console.error('CreateSleepRecord key error.')
@@ -59,17 +59,17 @@ export default createContainer(() => {
                                 await trackerRecordRef.set({ [key]: sleepRecord.recordDateTime.toISOString() }, { merge: true });
                             }
                             else {
-                                if (!trackerRecordData.bedTime && sleepRecord.recordType === 0) {
+                                if (!trackerRecordData.wakeUpTime && sleepRecord.recordType === 0) {
                                     trackerRecordRef
-                                        .set({ 'bedTime': sleepRecord.recordDateTime.toISOString() }, { merge: true })
+                                        .set({ 'wakeUpTime': sleepRecord.recordDateTime.toISOString() }, { merge: true })
                                         .catch((error) => {
                                             alert(error);
                                         })
                                 }
 
-                                if (!trackerRecordData.wakeUpTime && sleepRecord.recordType === 1) {
+                                if (!trackerRecordData.bedTime && sleepRecord.recordType === 1) {
                                     trackerRecordRef
-                                        .set({ 'wakeUpTime': sleepRecord.recordDateTime.toISOString() }, { merge: true })
+                                        .set({ 'bedTime': sleepRecord.recordDateTime.toISOString() }, { merge: true })
                                         .catch((error) => {
                                             alert(error);
                                         })
@@ -151,7 +151,8 @@ export default createContainer(() => {
                                     setBedTime(new Date(trackerRecordData.bedTime));
                                 }
                                 if (trackerRecordData.meals) {
-                                    setMeals(trackerRecordData.meals);
+                                    let sortedMeals = trackerRecordData.meals.sort((a: any, b: any) => (a.recordDateTime > b.recordDateTime) ? 1 : ((b.recordDateTime > a.recordDateTime) ? -1 : 0))
+                                    setMeals(sortedMeals);
                                 }
                             }
                         })

@@ -20,5 +20,14 @@
     "Record Meal": "食事記録をつける",
     "First Meal": "最初の食事",
     "Recent Meal": "直近の食事",
-    "No Record": "レコードなし"
+    "No Record": "レコードなし",
+    "Breakfast": "朝食",
+    "Lunch": "お昼",
+    "Snack": "間食",
+    "Dinner": "夕食",
+    "Drink": "飲み物",
+    "Date": "日付",
+    "Time": "時間",
+    "Submit": "登録",
+    "Back": "戻る"
 }

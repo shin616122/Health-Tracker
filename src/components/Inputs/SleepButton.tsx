@@ -6,8 +6,7 @@ import TrackerContainer from '../../containers/Tracker';
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 
 interface Props {
-    isLoading: boolean,
-    handleSleepTime: (recordType: number) => void
+    handleComponentChanges: (componentId: number) => void
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -56,7 +55,7 @@ export default ((props) => {
                 <IconButton
                     aria-label="wake"
                     className={classes.wakeUpButton}
-                    onClick={() => props.handleSleepTime(1)}
+                    onClick={() => props.handleComponentChanges(0)}
                 >
                     <div>
                         <LocalHotelIcon fontSize="large" style={{ color: '#5998AB' }} />
@@ -73,7 +72,7 @@ export default ((props) => {
                 <IconButton
                     aria-label="sleep"
                     className={classes.bedTimeButton}
-                    onClick={() => props.handleSleepTime(0)}
+                    onClick={() => props.handleComponentChanges(1)}
                 >
                     <div>
                         <LocalHotelIcon fontSize="large" style={{ color: '#5998AB' }} />
