@@ -2,27 +2,31 @@ import React from 'react';
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import { Card, CardContent, Grid, Typography } from "@material-ui/core";
 import CommonContainer from '../../containers/Common';
-import TrackerContainer from '../../containers/Tracker';
+import { MealRecordModel } from '../../Models/Models'
 
 interface Props {
+    label: string,
+    meals: MealRecordModel[] | undefined,
+    index: number
 
 }
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         cardRoot: {
-            // minWidth: 275,
+            minWidth: 186,
             // width: '100%'
         },
         title: {
             fontSize: 14,
+            alignItems: 'center',
+            justifyContent: 'center',
         },
     })
 );
 
 export default ((props) => {
     const commonContainer = CommonContainer.useContainer();
-    const trackerContainer = TrackerContainer.useContainer();
     const classes = useStyles();
 
     const convertDateTime = (dateTime: string) => {
@@ -30,30 +34,15 @@ export default ((props) => {
     }
 
     return (
-        <Grid container justify="space-between" direction="row" alignItems="stretch" spacing={0}>
-            <Grid key={0} item>
-                <Card className={classes.cardRoot}>
-                    <CardContent>
-                        <Typography className={classes.title} color="textSecondary">
-                            {commonContainer.t('First Meal')}
-                        </Typography>
-                        <Typography color="textSecondary" gutterBottom>
-                            {trackerContainer.meals && trackerContainer.meals.length !== 0 ? `${convertDateTime(trackerContainer.meals[0].recordDateTime)}` : commonContainer.t('No Record')}
-                        </Typography>
-                    </CardContent>
-                </Card>
-            </Grid><Grid key={1} item>
-                <Card className={classes.cardRoot}>
-                    <CardContent>
-                        <Typography className={classes.title} color="textSecondary">
-                            {commonContainer.t('Recent Meal')}
-                        </Typography>
-                        <Typography color="textSecondary" gutterBottom>
-                            {trackerContainer.trackerRecord && trackerContainer.meals.length !== 0 ? `${convertDateTime(trackerContainer.meals[trackerContainer.meals.length - 1].recordDateTime)}` : commonContainer.t('No Record')}
-                        </Typography>
-                    </CardContent>
-                </Card>
-            </Grid>
-        </Grid>
+        <Card className={classes.cardRoot}>
+            <CardContent >
+                <Typography className={classes.title} color="textSecondary">
+                    {commonContainer.t(props.label)}
+                </Typography>
+                <Typography variant="subtitle1" gutterBottom>
+                    {props.meals && props.meals.length !== 0 ? `${convertDateTime(props.meals[props.index].recordDateTime)}` : commonContainer.t('No Record')}
+                </Typography>
+            </CardContent>
+        </Card>
     )
 }) as React.FC<Props>;

@@ -13,24 +13,13 @@ interface Props {
     handleComponentChanges: (componentId: number) => void,
 }
 
-interface MealRecordModel {
-    recordDateTime: string,
-    mealType: number,
-    image: string,
-}
-
-interface SleepRecordModel {
-    recordDateTime: Date;
-    recordType: number;
-}
-
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             // height: '80vh',
-            display: 'flex',
-            justify: 'flex-start',
-            alignItems: 'center',
+            // display: 'flex',
+            // justify: 'flex-start',
+            // alignItems: 'center',
             background: "linear-gradient(180deg, #80BED1 10%, #BCE8E1  70%)"
         },
         icons: {
@@ -71,8 +60,8 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         donut: {
             position: "relative",
-            width: "340px",
-            height: "340px"
+            width: "300px",
+            height: "300px"
         },
         donutDefault: {
             width: "100%",
@@ -100,8 +89,8 @@ const useStyles = makeStyles((theme: Theme) =>
         donutText: {
             top: "35px",
             left: "35px",
-            width: "270px",
-            height: "270px",
+            width: "230px",
+            height: "230px",
             background: "linear-gradient(180deg, #80BED1 10%, #BCE8E1 70%)",
             position: "absolute",
             borderRadius: "50%",
@@ -130,6 +119,9 @@ const useStyles = makeStyles((theme: Theme) =>
             height: 48,
             width: 280,
             padding: '0 30px',
+            "&:hover": {
+                backgroundColor: "#FFF"
+            }
         },
     })
 );
@@ -174,7 +166,14 @@ export default ((props) => {
                     </div>
                 </Grid>
                 <Grid key={2} item>
-                    <SleepButton handleComponentChanges={props.handleComponentChanges} />
+                    <Grid container justify="center" direction="row" alignItems="center" spacing={10}>
+                        <Grid key={0} item>
+                            <SleepButton label={'Wake up Time'} data={trackerContainer.wakeUpTime} handleComponentChanges={props.handleComponentChanges} recordType={0} />
+                        </Grid>
+                        <Grid key={1} item>
+                            <SleepButton label={'Bed Time'} data={trackerContainer.bedTime} handleComponentChanges={props.handleComponentChanges} recordType={1} />
+                        </Grid>
+                    </Grid>
                 </Grid>
                 <Grid key={3} item>
                     <IconButton
@@ -188,8 +187,15 @@ export default ((props) => {
                         </Typography>
                     </IconButton>
                 </Grid>
-                <Grid key={4} item>
-                    <MealLabel />
+                <Grid key={4} item style={{ marginBottom: '40px' }}>
+                    <Grid container justify="center" direction="row" alignItems="center" spacing={0}>
+                        <Grid key={0} item>
+                            <MealLabel label={'First Meal'} meals={trackerContainer.meals} index={0} />
+                        </Grid>
+                        <Grid key={1} item>
+                            <MealLabel label={'Recent Meal'} meals={trackerContainer.meals} index={trackerContainer.meals.length - 1} />
+                        </Grid>
+                    </Grid>
                 </Grid>
             </Grid>
         </Grid >

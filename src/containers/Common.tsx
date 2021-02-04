@@ -4,17 +4,11 @@ import { createContainer } from 'unstated-next';
 import { firebase } from '../firebase/config';
 import i18n from 'i18next';
 import { initReactI18next, useTranslation } from 'react-i18next';
+import { UserModel } from '../Models/Models'
 
 import enJson from '../locales/en.json';
 import jaJson from '../locales/ja.json';
 import cmJson from '../locales/cm.json'
-
-interface UserModel {
-    uid: string;
-    fullName: string;
-    email: string;
-    chumaPoint: number;
-}
 
 i18n.use(initReactI18next).init({
     debug: true,
@@ -105,7 +99,7 @@ export default createContainer(() => {
                             id: uid,
                             email,
                             fullName,
-                            chumaPoint: 0
+                            chumaPoints: 0,
                         };
                         const usersRef = firebase.firestore().collection('users')
                         usersRef

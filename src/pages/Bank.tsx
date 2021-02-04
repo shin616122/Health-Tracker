@@ -6,7 +6,8 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 
 const useStyles = makeStyles({
     root: {
-        paddingTop: 20
+        paddingTop: 20,
+        background: "linear-gradient(180deg, #80BED1 10%, #FFF  70%)"
     },
     card: {
         maxWidth: 300,
@@ -44,7 +45,7 @@ export default (() => {
                             <Grid container justify="center" direction="row" alignItems="center" spacing={2}>
                                 <Grid key={0} item>
                                     <Typography variant="body2" color="textSecondary" component="p">
-                                        {commonContainer.user && `${commonContainer.user.chumaPoint} ${commonContainer.t('Chuma Points!')}`}
+                                        {commonContainer.user && `${commonContainer.user.chumaPoints} ${commonContainer.t('Chuma Points!')}`}
                                     </Typography>
                                 </Grid>
                                 <Grid key={1} item>

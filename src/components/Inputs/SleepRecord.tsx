@@ -3,9 +3,12 @@ import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import CommonContainer from '../../containers/Common';
 import TrackerContainer from '../../containers/Tracker';
 import { Formik, FormikHelpers } from 'formik';
-import { Button, Grid, TextField } from '@material-ui/core';
+import { Avatar, Button, Grid, TextField, Typography } from '@material-ui/core';
+import CreateIcon from '@material-ui/icons/Create';
+import { SleepRecordModel } from '../../Models/Models'
 
 interface Props {
+    label: string,
     recordType: number,
     handleComponentChanges: (componentId: number) => void,
 }
@@ -15,15 +18,10 @@ interface FormValues {
     time: string
 }
 
-interface SleepRecordModel {
-    recordDateTime: Date;
-    recordType: number;
-}
-
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
-            marginTop: '50px'
+            // marginTop: '50px'
             // background: "linear-gradient(180deg, #80BED1 10%, #BCE8E1  70%)"
         },
         container: {
@@ -49,6 +47,10 @@ const useStyles = makeStyles((theme: Theme) =>
             padding: '0 30px',
             boxShadow: '0 3px 5px 2px rgba(67, 120, 138, .3)',
         },
+        avatar: {
+            margin: theme.spacing(1),
+            backgroundColor: 'rgba(9, 137, 217, 0.8)',
+        },
     })
 );
 
@@ -72,8 +74,8 @@ export default ((props) => {
             }
             await trackerContainer.createSleepRecord(data as SleepRecordModel);
             await trackerContainer.getTrackerRecord(new Date());
-            props.handleComponentChanges(-1);
-            formikHelpers.setSubmitting(false);
+            await props.handleComponentChanges(-1);
+            await formikHelpers.setSubmitting(false);
         } catch (err) {
             if (err.status === 403) {
                 formikHelpers.setStatus('Invalid Staff No or Password');
@@ -95,8 +97,18 @@ export default ((props) => {
             {({ status, isSubmitting, handleSubmit }) => (
                 <form onSubmit={handleSubmit} className={classes.form} noValidate>
                     <Grid item xs={12} className={classes.root}>
-                        <Grid container justify="center" direction="column" alignItems="center" spacing={10}>
+                        <Grid container justify="center" direction="column" alignItems="center" spacing={1}>
                             <Grid key={0} item>
+                                <Avatar className={classes.avatar}>
+                                    <CreateIcon />
+                                </Avatar>
+                            </Grid>
+                            <Grid key={1} item>
+                                <Typography component="h1" variant="h5">
+                                    {commonContainer.t(props.label)}
+                                </Typography>
+                            </Grid>
+                            <Grid key={2} item>
                                 <TextField
                                     id="date"
                                     label={commonContainer.t('Date')}
@@ -109,7 +121,7 @@ export default ((props) => {
                                     }}
                                 />
                             </Grid>
-                            <Grid key={1} item>
+                            <Grid key={3} item>
                                 <TextField
                                     id="time"
                                     label={commonContainer.t('Time')}
@@ -125,7 +137,7 @@ export default ((props) => {
                                     }}
                                 />
                             </Grid>
-                            <Grid key={2} item>
+                            <Grid key={4} item>
                                 <Button
                                     type="submit"
                                     fullWidth

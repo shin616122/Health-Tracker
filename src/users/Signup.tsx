@@ -7,13 +7,7 @@ import { firebase } from '../firebase/config';
 import { Field, Formik, Form, FormikHelpers } from 'formik';
 import { TextField } from 'formik-material-ui';
 import CommonContainer from '../containers/Common';
-
-interface FormValues {
-    fullName: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-}
+import { SignupFormModel } from '../Models/Models'
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -53,7 +47,7 @@ export default ((props: any) => {
         });
     }, [history]);
 
-    const handleSignUp = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
+    const handleSignUp = async (values: SignupFormModel, formikHelpers: FormikHelpers<SignupFormModel>) => {
         try {
             if (values.password !== values.confirmPassword) {
                 formikHelpers.setStatus('Passwords don\'t match.');

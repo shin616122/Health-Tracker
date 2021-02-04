@@ -7,11 +7,7 @@ import { firebase } from '../firebase/config';
 import { Field, Formik, Form, FormikHelpers } from 'formik';
 import { TextField } from 'formik-material-ui';
 import CommonContainer from '../containers/Common';
-
-interface FormValues {
-    email: string;
-    password: string;
-}
+import { LoginFormModel } from '../Models/Models'
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -51,7 +47,7 @@ export default ((props: any) => {
         });
     }, [history]);
 
-    const handleSignIn = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
+    const handleSignIn = async (values: LoginFormModel, formikHelpers: FormikHelpers<LoginFormModel>) => {
         try {
             await commonContainer.signIn(values.email, values.password);
         } catch (error) {

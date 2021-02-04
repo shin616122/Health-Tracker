@@ -2,29 +2,18 @@ import React from 'react';
 import { Grid, Typography, IconButton } from "@material-ui/core";
 import LocalHotelIcon from '@material-ui/icons/LocalHotel';
 import CommonContainer from '../../containers/Common';
-import TrackerContainer from '../../containers/Tracker';
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 
 interface Props {
-    handleComponentChanges: (componentId: number) => void
+    label: string,
+    data: Date | undefined,
+    handleComponentChanges: (componentId: number) => void,
+    recordType: number,
 }
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        bedTimeButton: {
-            left: "40px",
-            width: "90px",
-            height: "90px",
-            display: "flex",
-            cursor: "pointer",
-            color: "#FF8400",
-            backgroundColor: "#FFF",
-            "&:hover": {
-                backgroundColor: "#FFF"
-            }
-        },
-        wakeUpButton: {
-            left: '-40px',
+        button: {
             width: "90px",
             height: "90px",
             display: "flex",
@@ -40,7 +29,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default ((props) => {
     const commonContainer = CommonContainer.useContainer();
-    const trackerContainer = TrackerContainer.useContainer();
     const classes = useStyles();
 
     const option = {
@@ -50,39 +38,24 @@ export default ((props) => {
     };
 
     return (
-        <Grid container justify="space-between" direction="row" alignItems="center" spacing={10}>
+        <Grid container justify="center" direction="column" alignItems="center" spacing={2}>
             <Grid key={0} item>
                 <IconButton
-                    aria-label="wake"
-                    className={classes.wakeUpButton}
-                    onClick={() => props.handleComponentChanges(0)}
+                    aria-label={props.label}
+                    className={classes.button}
+                    onClick={() => props.handleComponentChanges(props.recordType)}
                 >
                     <div>
                         <LocalHotelIcon fontSize="large" style={{ color: '#5998AB' }} />
                         <Typography style={{ fontSize: '0.6em', color: '#5998AB' }} variant="body1" component={'p'}>
-                            {commonContainer.t('Wake up Time')}
+                            {commonContainer.t(props.label)}
                         </Typography>
                     </div>
                 </IconButton>
-                <Typography style={{ fontSize: '0.6em', color: '#5998AB' }} variant="body1" component={'p'}>
-                    {trackerContainer.wakeUpTime ? trackerContainer.wakeUpTime.toLocaleTimeString('ja-JP', option) : ''}
-                </Typography>
             </Grid>
             <Grid key={1} item>
-                <IconButton
-                    aria-label="sleep"
-                    className={classes.bedTimeButton}
-                    onClick={() => props.handleComponentChanges(1)}
-                >
-                    <div>
-                        <LocalHotelIcon fontSize="large" style={{ color: '#5998AB' }} />
-                        <Typography style={{ fontSize: '0.6em', color: '#5998AB' }} variant="body1" component={'p'}>
-                            {commonContainer.t('Bed Time')}
-                        </Typography>
-                    </div>
-                </IconButton>
-                <Typography style={{ fontSize: '0.6em', color: '#5998AB' }} variant="body1" component={'p'}>
-                    {trackerContainer.bedTime ? trackerContainer.bedTime.toLocaleTimeString('ja-JP', option) : ''}
+                <Typography style={{ color: '#5998AB' }} variant="h5" component={'h1'}>
+                    {props.data ? props.data.toLocaleTimeString('ja-JP', option) : commonContainer.t('No Record')}
                 </Typography>
             </Grid>
         </Grid>

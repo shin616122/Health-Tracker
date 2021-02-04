@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { IconButton } from "@material-ui/core";
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import RestaurantIcon from "@material-ui/icons/Restaurant";
-import CommonContainer from '../../containers/Common';
-import TrackerContainer from '../../containers/Tracker';
 
 interface Props {
 }
@@ -32,14 +30,9 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default ((props) => {
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [now, setNow] = useState<Date>(new Date());
-    const commonContainer = CommonContainer.useContainer();
-    const trackerContainer = TrackerContainer.useContainer();
-
     const classes = useStyles();
     const left = "-35px";
-    const top = "-185px";
+    const top = "-165px";
 
     return (
         <IconButton

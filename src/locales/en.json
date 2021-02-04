@@ -29,5 +29,7 @@
     "Date": "Date",
     "Time": "Time",
     "Submit": "Submit",
-    "Back": "Back"
+    "Back": "Back",
+    "CheckIn": "CheckIn",
+    "AlreadyCheckedIn": "AlreadyCheckedIn"
 }

@@ -29,5 +29,7 @@
     "Date": "日付",
     "Time": "時間",
     "Submit": "登録",
-    "Back": "戻る"
+    "Back": "戻る",
+    "CheckIn": "チェックイン",
+    "AlreadyCheckedIn": "本日はチェックイン済"
 }

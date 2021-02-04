@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
             position: 'fixed',
             bottom: 0,
             left: 0,
+            background: '#f7f7f7',
         },
         navbar: {
             background: 'rgba(20, 153, 196, 1)',
@@ -35,12 +36,14 @@ const useStyles = makeStyles((theme: Theme) =>
             [theme.breakpoints.up('md')]: {
                 display: 'flex',
             },
+            zIndex: 100
         },
         sectionMobile: {
             display: 'flex',
             [theme.breakpoints.up('md')]: {
                 display: 'none',
             },
+            zIndex: 100
         },
         selector: {
             color: 'white',
