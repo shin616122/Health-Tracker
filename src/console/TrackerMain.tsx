@@ -136,7 +136,11 @@ export default ((props) => {
     const left = "-35px";
     const top = "-185px";
 
-    let mealIcons = [<MealIconButton key={0} />];
+    let mealIcons = [
+        <MealIconButton key={0} top={-165} left={-35} />,
+        <MealIconButton key={1} top={-35} left={-165} />,
+        <MealIconButton key={2} top={35} left={165} />,
+    ];
 
     useEffect(() => {
         (async () => {

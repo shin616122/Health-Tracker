@@ -4,6 +4,8 @@ import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import RestaurantIcon from "@material-ui/icons/Restaurant";
 
 interface Props {
+    top: number,
+    left: number
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -31,14 +33,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default ((props) => {
     const classes = useStyles();
-    const left = "-35px";
-    const top = "-165px";
 
     return (
         <IconButton
             aria-label="food"
             className={classes.button}
-            style={{ top: `calc(50% + ${top})`, left: `calc(50% + ${left})` }}
+            style={{ top: `calc(50% + ${props.top}px)`, left: `calc(50% + ${props.left}px)` }}
         >
             <RestaurantIcon fontSize="large" />
         </IconButton>
