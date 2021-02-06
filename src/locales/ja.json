@@ -31,5 +31,7 @@
     "Submit": "登録",
     "Back": "戻る",
     "CheckIn": "チェックイン",
-    "AlreadyCheckedIn": "本日はチェックイン済"
+    "AlreadyCheckedIn": "本日はチェックイン済",
+    "Medicine": "お薬",
+    "History": "履歴"
 }

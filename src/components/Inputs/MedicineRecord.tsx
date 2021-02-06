@@ -4,14 +4,12 @@ import CommonContainer from '../../containers/Common';
 import TrackerContainer from '../../containers/Tracker';
 import { Formik, FormikHelpers } from 'formik';
 import { Avatar, Button, Grid, TextField, Typography } from '@material-ui/core';
+import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import CreateIcon from '@material-ui/icons/Create';
-import { SleepRecordModel } from '../../Models/Models'
+import { MealRecordModel } from '../../Models/Models'
 
 interface Props {
-    label: string,
-    recordType: number,
     handleComponentChanges: (componentId: number) => void,
-    sleepTime: Date | undefined
 }
 
 interface FormValues {
@@ -38,6 +36,9 @@ const useStyles = makeStyles((theme: Theme) =>
             width: '100%', // Fix IE 11 issue.
             marginTop: theme.spacing(1),
         },
+        toggleContainer: {
+            margin: theme.spacing(2, 0),
+        },
         submit: {
             margin: theme.spacing(3, 0, 2),
             background: 'linear-gradient(55deg, #0989D9 10%, #63BDDB 70%)',
@@ -60,23 +61,30 @@ export default ((props) => {
     const trackerContainer = TrackerContainer.useContainer();
     const [dateValue, setDateValue] = useState<string>(new Date().toLocaleDateString('ja-JP', { year: "numeric", month: "2-digit", day: "2-digit" }).replaceAll('/', '-'));
     const [timeValue, setTimeValue] = useState<string>(new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit', hour12: false }));
+    const [mealType, setMealType] = useState<number | null>(0);
 
     const classes = useStyles();
 
-    const handleSleepRecord = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
+    const handleMealType = (event: React.MouseEvent<HTMLElement>, newMealType: number | null) => {
+        if (newMealType !== null) {
+            setMealType(newMealType);
+        }
+    };
+
+    const handleMealRecord = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
         try {
             if (!window.confirm('Are you sure?')) {
                 return;
             }
 
-            let data: SleepRecordModel = {
-                recordDateTime: new Date(`${values.date}T${values.time}`),
-                recordType: props.recordType ?? -1,
+            let data: MealRecordModel = {
+                recordDateTime: new Date(`${values.date}T${values.time}`).toISOString(),
+                mealType: mealType ?? -1,
+                image: 'url'
             }
-            await trackerContainer.createSleepRecord(data as SleepRecordModel);
-            await trackerContainer.getTrackerRecord(new Date());
-            await props.handleComponentChanges(-1);
-            await formikHelpers.setSubmitting(false);
+            await trackerContainer.createOrUpdateMealRecord(new Date(`${values.date}T${values.time}`), data);
+            props.handleComponentChanges(-1);
+            formikHelpers.setSubmitting(false);
         } catch (err) {
             if (err.status === 403) {
                 formikHelpers.setStatus('Invalid Staff No or Password');
@@ -94,7 +102,7 @@ export default ((props) => {
                 date: dateValue,
                 time: timeValue,
             }}
-            onSubmit={handleSleepRecord}>
+            onSubmit={handleMealRecord}>
             {({ status, isSubmitting, handleSubmit }) => (
                 <form onSubmit={handleSubmit} className={classes.form} noValidate>
                     <Grid item xs={12} className={classes.root}>
@@ -106,15 +114,10 @@ export default ((props) => {
                             </Grid>
                             <Grid key={1} item>
                                 <Typography component="h1" variant="h5">
-                                    {commonContainer.t(props.label)}
+                                    {commonContainer.t('Record Meal')}
                                 </Typography>
                             </Grid>
                             <Grid key={2} item>
-                                <Typography style={{ color: '#5998AB' }} variant="body1" component={'p'}>
-                                    {props.sleepTime ? `${props.sleepTime.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}` : commonContainer.t('No Record')}
-                                </Typography>
-                            </Grid>
-                            <Grid key={3} item>
                                 <TextField
                                     id="date"
                                     label={commonContainer.t('Date')}
@@ -127,7 +130,7 @@ export default ((props) => {
                                     }}
                                 />
                             </Grid>
-                            <Grid key={4} item>
+                            <Grid key={3} item>
                                 <TextField
                                     id="time"
                                     label={commonContainer.t('Time')}
@@ -142,6 +145,32 @@ export default ((props) => {
                                         step: 300, // 5 min
                                     }}
                                 />
+                            </Grid>
+                            <Grid key={4} item>
+                                <div className={classes.toggleContainer}>
+                                    <ToggleButtonGroup
+                                        value={mealType}
+                                        exclusive
+                                        onChange={handleMealType}
+                                        aria-label="mealType"
+                                    >
+                                        <ToggleButton value={0} aria-label="breakfast">
+                                            {commonContainer.t('Breakfast')}
+                                        </ToggleButton>
+                                        <ToggleButton value={1} aria-label="lunch">
+                                            {commonContainer.t('Lunch')}
+                                        </ToggleButton>
+                                        <ToggleButton value={2} aria-label="snack">
+                                            {commonContainer.t('Snack')}
+                                        </ToggleButton>
+                                        <ToggleButton value={3} aria-label="dinner">
+                                            {commonContainer.t('Dinner')}
+                                        </ToggleButton>
+                                        <ToggleButton value={4} aria-label="drink">
+                                            {commonContainer.t('Drink')}
+                                        </ToggleButton>
+                                    </ToggleButtonGroup>
+                                </div>
                             </Grid>
                             <Grid key={5} item>
                                 <Button

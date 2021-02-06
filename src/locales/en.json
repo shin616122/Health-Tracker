@@ -31,5 +31,7 @@
     "Submit": "Submit",
     "Back": "Back",
     "CheckIn": "CheckIn",
-    "AlreadyCheckedIn": "AlreadyCheckedIn"
+    "AlreadyCheckedIn": "AlreadyCheckedIn",
+    "Medicine": "Medicine",
+    "History": "History"
 }

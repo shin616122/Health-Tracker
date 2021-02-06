@@ -13,6 +13,11 @@ export interface MealRecordModel {
     image: string,
 }
 
+export interface MedicineModel {
+    recordDateTime: string,
+    medicineType: number,
+}
+
 export interface SleepRecordModel {
     recordDateTime: Date;
     recordType: number;
@@ -35,4 +40,10 @@ export interface SignupFormModel {
     email: string;
     password: string;
     confirmPassword: string;
+}
+
+export interface LastWeekSleepTimeModel {
+    createdDate: string,
+    wakeUpTime: string,
+    bedTime: string,
 }

@@ -7,6 +7,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import HomeIcon from '@material-ui/icons/Home';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import AssessmentIcon from '@material-ui/icons/Assessment';
+import ScatterPlotIcon from '@material-ui/icons/ScatterPlot';
 import CommonContainer from '../containers/Common';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -199,6 +200,12 @@ export default ((props: any) => {
                                 label={`${commonContainer.t('Tracker')}`}
                                 value="tracker"
                                 icon={<AssessmentIcon />} />
+                            {/* <BottomNavigationAction
+                                component={Link}
+                                to="../pages/medicine"
+                                label={`${commonContainer.t('Medicine')}`}
+                                value="medicine"
+                                icon={<ScatterPlotIcon />} /> */}
                         </BottomNavigation>
                     </div>
                 </Toolbar>

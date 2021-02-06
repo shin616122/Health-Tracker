@@ -54,7 +54,7 @@ export default ((props) => {
                 </IconButton>
             </Grid>
             <Grid key={1} item>
-                <Typography style={{ color: '#5998AB' }} variant="h5" component={'h1'}>
+                <Typography style={{ color: '#5998AB' }} variant="h6" component={'h1'}>
                     {props.data ? props.data.toLocaleTimeString('ja-JP', option) : commonContainer.t('No Record')}
                 </Typography>
             </Grid>

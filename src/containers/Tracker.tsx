@@ -39,7 +39,7 @@ export default createContainer(() => {
                         .then(async (document) => {
                             trackerRecordData = document.data() as TrackerRecordModel;
                             if (!trackerRecordData) {
-                                await trackerRecordRef.set({ [key]: sleepRecord.recordDateTime.toISOString() }, { merge: true });
+                                await trackerRecordRef.set({ [key]: sleepRecord.recordDateTime.toISOString(), timestamp: firebase.firestore.Timestamp.now() }, { merge: true });
                             }
                             else {
                                 if (sleepRecord.recordType === 0) {

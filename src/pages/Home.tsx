@@ -3,6 +3,8 @@ import { CardMedia, Container, Grid, Typography } from '@material-ui/core';
 import CommonContainer from '../containers/Common';
 import CheckInButton from '../components/Inputs/CheckInButton';
 import { makeStyles } from '@material-ui/core/styles';
+import { Stage, Graphics } from '@inlet/react-pixi';
+import { Text } from 'recharts';
 
 const useStyles = makeStyles({
     root: {
@@ -33,7 +35,7 @@ export default (() => {
                     /> */}
                 </Grid>
                 <Grid key={1} item>
-                    <Typography component={'h2'} style={{ color: 'white' }}>
+                    <Typography component={'h4'} style={{ color: 'white' }}>
                         {commonContainer.t('Welcome！Chuma App!')}
                     </Typography>
                 </Grid>
@@ -41,6 +43,21 @@ export default (() => {
                     <CheckInButton />
                 </Grid>
             </Grid>
+            {/* <Stage>
+                <Graphics
+                    draw={g => {
+                        g.lineStyle(0)
+                        g.beginFill(0xffff0b, 0.5)
+                        g.drawCircle(100, 100, 50)
+                        g.endFill()
+
+                        g.lineStyle(0)
+                        g.beginFill(0xffffff, 1)
+                        g.drawCircle(100, 100, 20)
+                        g.endFill()
+                    }}
+                />
+            </Stage> */}
         </div>
     )
 }) as React.FC;
