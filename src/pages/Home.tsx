@@ -4,7 +4,6 @@ import CommonContainer from '../containers/Common';
 import CheckInButton from '../components/Inputs/CheckInButton';
 import { makeStyles } from '@material-ui/core/styles';
 import { Stage, Graphics } from '@inlet/react-pixi';
-import { Text } from 'recharts';
 
 const useStyles = makeStyles({
     root: {
