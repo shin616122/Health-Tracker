@@ -4,10 +4,10 @@ import { Paper, Typography, Grid, CircularProgress } from '@material-ui/core';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, } from 'recharts';
 import { format, getUnixTime, parse } from 'date-fns'
 import CommonContainer from '../../containers/Common';
-import { LastWeekSleepTimeModel } from '../../Models/Models'
+import { LastWeekMealTimeModel } from '../../Models/Models'
 
 interface Props {
-    lastWeekSleepTimes: LastWeekSleepTimeModel[]
+    lastWeekMealTimes: LastWeekMealTimeModel[]
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -49,14 +49,14 @@ export default ((props) => {
             <Grid container justify="center" direction="column" alignItems="center" spacing={1}>
                 <Grid key={0} item>
                     <Typography component={'h4'}>
-                        {commonContainer.t('Bed Time')}`・{commonContainer.t('Wake up Time')}
+                        {commonContainer.t('Meal')}
                     </Typography>
                 </Grid>
                 <Grid key={1} item>
                     <LineChart
                         width={350}
                         height={300}
-                        data={props.lastWeekSleepTimes}
+                        data={props.lastWeekMealTimes}
                         margin={{
                             top: 5, right: 3, left: 3, bottom: 5,
                         }}

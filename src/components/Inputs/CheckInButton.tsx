@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default ((props) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [sending, setSending] = useState(false);
     const commonContainer = CommonContainer.useContainer();
     const trackerContainer = TrackerContainer.useContainer();
 

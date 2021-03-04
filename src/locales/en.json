@@ -33,5 +33,6 @@
     "CheckIn": "CheckIn",
     "AlreadyCheckedIn": "AlreadyCheckedIn",
     "Medicine": "Medicine",
-    "History": "History"
+    "History": "History",
+    "Meal": "Meal"
 }

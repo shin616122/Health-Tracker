@@ -47,3 +47,9 @@ export interface LastWeekSleepTimeModel {
     wakeUpTime: string,
     bedTime: string,
 }
+
+export interface LastWeekMealTimeModel {
+    createdDate: string,
+    wakeUpTime: string,
+    bedTime: string,
+}

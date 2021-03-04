@@ -4,17 +4,19 @@ import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import CommonContainer from '../containers/Common';
 import TrackerContainer from '../containers/Tracker';
 import SleepChart from '../components/Labels/SleepChart';
-import { LastWeekSleepTimeModel } from '../Models/Models';
+import MealChart from '../components/Labels/MealChart';
+import { LastWeekSleepTimeModel, LastWeekMealTimeModel } from '../Models/Models';
 
 interface Props {
     lastWeekSleepTimes: LastWeekSleepTimeModel[],
+    lastWeekMealTimes: LastWeekMealTimeModel[],
     handleComponentChanges: (componentId: number) => void,
 }
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
-
+            marginBottom: '100px'
         },
         submit: {
             margin: theme.spacing(3, 0, 2),
@@ -57,6 +59,9 @@ export default ((props) => {
                     <SleepChart lastWeekSleepTimes={props.lastWeekSleepTimes} />
                 </Grid>
                 <Grid key={2} item>
+                    <MealChart lastWeekMealTimes={props.lastWeekMealTimes} />
+                </Grid>
+                <Grid key={3} item>
                     <Button
                         type="button"
                         fullWidth

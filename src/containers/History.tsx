@@ -1,19 +1,20 @@
 import { useState } from 'react';
 import useReactRouter from 'use-react-router';
 import { createContainer } from 'unstated-next';
-import { firebase } from '../firebase/config';
-import { LastWeekSleepTimeModel } from '../Models/Models'
+import { auth, firestore, firebase } from '../firebase/config';
+import { LastWeekSleepTimeModel, LastWeekMealTimeModel } from '../Models/Models'
 import { format, getUnixTime, parse } from 'date-fns'
 
 export default createContainer(() => {
     const { history } = useReactRouter();
     const [lastWeekSleepTimes, setLastWeekSleepTimes] = useState<LastWeekSleepTimeModel[]>([])
+    const [lastWeekMealTimes, setLastWeekMealTimes] = useState<LastWeekMealTimeModel[]>([])
 
     const getLastWeekSleepTimes = async (today: Date) => {
         try {
-            firebase.auth().onAuthStateChanged(async user => {
+            auth.onAuthStateChanged(async user => {
                 if (user) {
-                    const trackerRecordRef = firebase.firestore()
+                    const trackerRecordRef = firestore
                         .collection('users').doc(user.uid)
                         .collection('trackerRecords');
 
@@ -25,6 +26,7 @@ export default createContainer(() => {
                     let lastSevenDayParameter = getLastSevenDay(today);
 
                     const snapshot = await trackerRecordRef
+                        // .where(firebase.firestore.FieldPath.documentId(), 'in', lastSevenDayParameter)
                         .where(firebase.firestore.FieldPath.documentId(), 'in', lastSevenDayParameter)
                         .get();
 
@@ -48,6 +50,45 @@ export default createContainer(() => {
         }
     }
 
+    const getLastWeekMealTimes = async (today: Date) => {
+        try {
+            auth.onAuthStateChanged(async user => {
+                if (user) {
+                    const trackerRecordRef = firestore
+                        .collection('users').doc(user.uid)
+                        .collection('trackerRecords');
+
+                    // TODO
+                    // if (lastWeekSleepTimes.length < 0) {
+                    // if (lastWeekSleepTimes[lastWeekSleepTimes.length - 1].createdDate !== format(today, 'yyyy-MM-dd')) {
+                    //     console.log(234)
+                    // }
+                    let lastSevenDayParameter = getLastSevenDay(today);
+
+                    const snapshot = await trackerRecordRef
+                        .where(firebase.firestore.FieldPath.documentId(), 'in', lastSevenDayParameter)
+                        .get();
+
+                    let mealTimeDatas: LastWeekMealTimeModel[] = [];
+
+                    snapshot.forEach(doc => {
+                        let data = doc.data();
+                        let mealTimeData = { 'createdDate': doc.id, 'wakeUpTime': new Date(data.wakeUpTime).getHours().toString(), 'bedTime': new Date(data.bedTime).getHours().toString() };
+
+                        mealTimeDatas.push(mealTimeData);
+                    });
+                    setLastWeekMealTimes(mealTimeDatas);
+                    // }
+
+                }
+            })
+        } catch (err) {
+            if (err.status === 401) {
+                history.push('/login');
+            }
+        }
+    }
+
     const getLastSevenDay = (today: Date) => {
         let lastSevenDays: string[] = [];
 
@@ -59,6 +100,6 @@ export default createContainer(() => {
     }
 
     return {
-        getLastWeekSleepTimes, lastWeekSleepTimes
+        getLastWeekSleepTimes, lastWeekSleepTimes, getLastWeekMealTimes, lastWeekMealTimes
     };
 });

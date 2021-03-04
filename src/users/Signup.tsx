@@ -3,7 +3,7 @@ import useReactRouter from 'use-react-router';
 import { Avatar, Box, Button, CssBaseline, Container, Grid, Typography, FormHelperText, Link } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
-import { firebase } from '../firebase/config';
+import { auth } from '../firebase/config';
 import { Field, Formik, Form, FormikHelpers } from 'formik';
 import { TextField } from 'formik-material-ui';
 import CommonContainer from '../containers/Common';
@@ -42,7 +42,7 @@ export default ((props: any) => {
     const commonContainer = CommonContainer.useContainer();
 
     useEffect(() => {
-        firebase.auth().onAuthStateChanged(user => {
+        auth.onAuthStateChanged(user => {
             user && history.push('/pages/home');
         });
     }, [history]);

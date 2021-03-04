@@ -31,7 +31,7 @@ export default (() => {
             jsxElement = <MealRecord handleComponentChanges={handleComponentChanges} />
             break;
         case 3:
-            jsxElement = <History lastWeekSleepTimes={historyContainer.lastWeekSleepTimes} handleComponentChanges={handleComponentChanges} />
+            jsxElement = <History lastWeekSleepTimes={historyContainer.lastWeekSleepTimes} lastWeekMealTimes={historyContainer.lastWeekMealTimes} handleComponentChanges={handleComponentChanges} />
             break;
         default:
             jsxElement = <TrackerMain handleComponentChanges={handleComponentChanges} />

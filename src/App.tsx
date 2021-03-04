@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { firebase } from './firebase/config';
+import { auth } from './firebase/config';
 import CommonContainer from './containers/Common';
 import Index from './pages/Index';
 import Login from './users/Login';
@@ -10,7 +10,7 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
+    auth.onAuthStateChanged(user => {
       setLoading(false);
     });
   }, []);

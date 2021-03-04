@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import useReactRouter from 'use-react-router';
 import { createContainer } from 'unstated-next';
-import { firebase } from '../firebase/config';
+import { auth, firestore, firebase } from '../firebase/config';
+import axios from 'axios';
 import { TrackerRecordModel, MealRecordModel, SleepRecordModel } from '../Models/Models'
+import { callNotifyMessage } from '../lib/callables';
 
 export default createContainer(() => {
     const { history } = useReactRouter();
@@ -14,10 +16,10 @@ export default createContainer(() => {
 
     const createSleepRecord = async (sleepRecord: SleepRecordModel) => {
         try {
-            firebase.auth().onAuthStateChanged(async user => {
+            auth.onAuthStateChanged(async user => {
                 let trackerRecordData: TrackerRecordModel | undefined = undefined;
                 if (user) {
-                    const trackerRecordRef = firebase.firestore()
+                    const trackerRecordRef = firestore
                         .collection('users').doc(user.uid)
                         .collection('trackerRecords').doc(sleepRecord.recordDateTime.toISOString().substr(0, 10));
 
@@ -80,10 +82,10 @@ export default createContainer(() => {
 
     const createOrUpdateMealRecord = async (recordDate: Date, data: MealRecordModel) => {
         try {
-            firebase.auth().onAuthStateChanged(async user => {
+            auth.onAuthStateChanged(async user => {
                 let trackerRecordData: TrackerRecordModel | undefined = undefined;
                 if (user) {
-                    const trackerRecordRef = firebase.firestore()
+                    const trackerRecordRef = firestore
                         .collection('users').doc(user.uid)
                         .collection('trackerRecords').doc(recordDate.toISOString().substr(0, 10));
 
@@ -120,12 +122,12 @@ export default createContainer(() => {
 
     const addPoints = async (points: number) => {
         try {
-            firebase.auth().onAuthStateChanged(async user => {
+            auth.onAuthStateChanged(async user => {
                 let trackerRecordData: TrackerRecordModel | undefined = undefined;
                 let chumaPoints = 0;
 
                 if (user) {
-                    const usersRef = firebase.firestore().collection('users');
+                    const usersRef = firestore.collection('users');
                     usersRef
                         .doc(user.uid)
                         .get()
@@ -133,7 +135,7 @@ export default createContainer(() => {
                             const userData = document.data()
                             if (userData) {
                                 if (!userData.isCheckedIn) {
-                                    const trackerRecordRef = firebase.firestore()
+                                    const trackerRecordRef = firestore
                                         .collection('users').doc(user.uid)
                                         .collection('trackerRecords').doc(new Date().toISOString().substr(0, 10));
 
@@ -153,9 +155,9 @@ export default createContainer(() => {
                                                         trackerRecordRef.set({})
                                                     }
                                                 })
-                                                .then(() => {
-                                                    trackerRecordRef
-                                                        .update({ isCheckedIn: true })
+                                                .then(async () => {
+                                                    await trackerRecordRef
+                                                        .update({ isCheckedIn: true, 'checkInTime': new Date().toISOString() })
                                                         .then(() => {
                                                             console.log('Checked In');
                                                             setIsCheckedIn(true);
@@ -163,6 +165,8 @@ export default createContainer(() => {
                                                         .catch((error) => {
                                                             alert(error);
                                                         });
+
+                                                    await callNotifyMessage(userData.fullName);
                                                 })
                                                 .finally(() => {
                                                     setTrackerRecord(trackerRecordData as TrackerRecordModel);
@@ -180,9 +184,9 @@ export default createContainer(() => {
 
     const getTrackerRecord = async (today: Date) => {
         try {
-            firebase.auth().onAuthStateChanged(async user => {
+            auth.onAuthStateChanged(async user => {
                 if (user) {
-                    const trackerRecordRef = firebase.firestore()
+                    const trackerRecordRef = firestore
                         .collection('users').doc(user.uid)
                         .collection('trackerRecords').doc(today.toISOString().substr(0, 10));
 

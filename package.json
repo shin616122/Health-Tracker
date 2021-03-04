@@ -18,8 +18,10 @@
     "@types/react": "^16.9.53",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.7",
+    "axios": "^0.21.1",
     "date-fns": "^2.0.0-beta.5",
     "firebase": "^8.2.3",
+    "firebase-tools": "^9.5.0",
     "formik": "^2.2.6",
     "formik-material-ui": "^3.0.1",
     "formik-material-ui-pickers": "^0.0.12",
@@ -40,7 +42,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "use:default": "firebase use default",
+    "emulator": "npm --prefix functions run emulator",
+    "dev": "npm run use:default && npm run emulator & npm run start"
   },
   "eslintConfig": {
     "extends": [

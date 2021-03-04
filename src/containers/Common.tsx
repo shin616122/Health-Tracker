@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import useReactRouter from 'use-react-router';
 import { createContainer } from 'unstated-next';
-import { firebase } from '../firebase/config';
+import { auth, firestore } from '../firebase/config';
 import i18n from 'i18next';
 import { initReactI18next, useTranslation } from 'react-i18next';
 import { UserModel } from '../Models/Models'
@@ -34,9 +34,9 @@ export default createContainer(() => {
 
     const loadMe = async () => {
         try {
-            firebase.auth().onAuthStateChanged(user => {
+            auth.onAuthStateChanged(user => {
                 if (user) {
-                    const usersRef = firebase.firestore().collection('users');
+                    const usersRef = firestore.collection('users');
                     usersRef
                         .doc(user.uid)
                         .get()
@@ -58,13 +58,12 @@ export default createContainer(() => {
 
     const signIn = async (email: string, password: string) => {
         try {
-            await firebase
-                .auth()
+            await auth
                 .signInWithEmailAndPassword(email, password)
                 .then((response) => {
                     if (response.user) {
                         const uid = response.user.uid
-                        const usersRef = firebase.firestore().collection('users')
+                        const usersRef = firestore.collection('users')
                         usersRef
                             .doc(uid)
                             .get()
@@ -89,8 +88,7 @@ export default createContainer(() => {
 
     const signUp = async (email: string, password: string, fullName: string) => {
         try {
-            await firebase
-                .auth()
+            await auth
                 .createUserWithEmailAndPassword(email, password)
                 .then((response) => {
                     if (response.user) {
@@ -101,7 +99,7 @@ export default createContainer(() => {
                             fullName,
                             chumaPoints: 0,
                         };
-                        const usersRef = firebase.firestore().collection('users')
+                        const usersRef = firestore.collection('users')
                         usersRef
                             .doc(uid)
                             .set(data)
@@ -120,7 +118,7 @@ export default createContainer(() => {
 
     const signOut = async () => {
         try {
-            await firebase.auth().signOut();
+            await auth.signOut();
             setUser(undefined);
             history.push('/login');
         } catch (err) {

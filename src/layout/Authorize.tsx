@@ -17,6 +17,7 @@ export default ((props) => {
                 await commonContainer.loadMe()
                 await trackerContainer.getTrackerRecord(new Date());
                 await historyContainer.getLastWeekSleepTimes(new Date());
+                await historyContainer.getLastWeekMealTimes(new Date());
             } else {
                 history.push('/login');
             }

@@ -20,7 +20,7 @@
     "Record Meal": "食事記録をつける",
     "First Meal": "最初の食事",
     "Recent Meal": "直近の食事",
-    "No Record": "レコードなし",
+    "No Record": "なし",
     "Breakfast": "朝食",
     "Lunch": "お昼",
     "Snack": "間食",
@@ -33,5 +33,6 @@
     "CheckIn": "チェックイン",
     "AlreadyCheckedIn": "本日はチェックイン済",
     "Medicine": "お薬",
-    "History": "履歴"
+    "History": "履歴",
+    "Meal": "食事"
 }
