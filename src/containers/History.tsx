@@ -2,7 +2,7 @@ import { useState } from 'react';
 import useReactRouter from 'use-react-router';
 import { createContainer } from 'unstated-next';
 import { auth, firestore, firebase } from '../firebase/config';
-import { LastWeekSleepTimeModel, LastWeekMealTimeModel } from '../Models/Models'
+import { LastWeekSleepTimeModel, LastWeekMealTimeModel, MealRecordModel } from '../Models/Models'
 import { format, getUnixTime, parse } from 'date-fns'
 
 export default createContainer(() => {
@@ -73,10 +73,33 @@ export default createContainer(() => {
 
                     snapshot.forEach(doc => {
                         let data = doc.data();
-                        let mealTimeData = { 'createdDate': doc.id, 'wakeUpTime': new Date(data.wakeUpTime).getHours().toString(), 'bedTime': new Date(data.bedTime).getHours().toString() };
+                        let meals = data.meals;
+                        let mealTimeData = { 'createdDate': doc.id };
+                        let key = ''
+                        // console.log(data)
+                        // console.log(meals)
+                        // meals.forEach((meal: MealRecordModel) => {
+                        //     switch (meal.mealType) {
+                        //         case 0:
+                        //             key = 'breakfastTime';
+                        //             mealTimeData = { [key]: new Date(data.recordDateTime).getHours().toString(), ...mealTimeData };
+                        //             break;
+                        //         case 1:
+                        //             key = 'lunchTime';
+                        //             mealTimeData = { [key]: new Date(data.recordDateTime).getHours().toString(), ...mealTimeData };
+                        //             break;
+                        //         case 2:
+                        //             key = 'dinnerTime';
+                        //             mealTimeData = { [key]: new Date(data.recordDateTime).getHours().toString(), ...mealTimeData };
+                        //             break;
+                        //         default:
+                        //             break;
+                        //     }
+                        // });
 
                         mealTimeDatas.push(mealTimeData);
                     });
+                    console.log(mealTimeDatas)
                     setLastWeekMealTimes(mealTimeDatas);
                     // }
 

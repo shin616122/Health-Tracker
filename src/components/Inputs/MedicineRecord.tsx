@@ -6,7 +6,7 @@ import { Formik, FormikHelpers } from 'formik';
 import { Avatar, Button, Grid, TextField, Typography } from '@material-ui/core';
 import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import CreateIcon from '@material-ui/icons/Create';
-import { MealRecordModel } from '../../Models/Models'
+import { MedicineRecordModel } from '../../Models/Models'
 
 interface Props {
     handleComponentChanges: (componentId: number) => void,
@@ -61,28 +61,38 @@ export default ((props) => {
     const trackerContainer = TrackerContainer.useContainer();
     const [dateValue, setDateValue] = useState<string>(new Date().toLocaleDateString('ja-JP', { year: "numeric", month: "2-digit", day: "2-digit" }).replaceAll('/', '-'));
     const [timeValue, setTimeValue] = useState<string>(new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit', hour12: false }));
-    const [mealType, setMealType] = useState<number | null>(0);
+    const [stomachMedicineType, setStomachMedicineType] = useState<number | null>(null);
+    const [mentalMedicineType, setMentalMedicineTypeType] = useState<number | null>(null);
+    const [pillType, setPillType] = useState<number | null>(null);
 
     const classes = useStyles();
 
-    const handleMealType = (event: React.MouseEvent<HTMLElement>, newMealType: number | null) => {
-        if (newMealType !== null) {
-            setMealType(newMealType);
-        }
+    const handleStomachMedicineType = (event: React.MouseEvent<HTMLElement>, newStomachMedicineType: number | null) => {
+        setStomachMedicineType(newStomachMedicineType);
     };
 
-    const handleMealRecord = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
+    const handleMentalMedicineType = (event: React.MouseEvent<HTMLElement>, newMentalMedicineType: number | null) => {
+        setMentalMedicineTypeType(newMentalMedicineType);
+    };
+
+    const handlePillType = (event: React.MouseEvent<HTMLElement>, newPillType: number | null) => {
+        setPillType(newPillType);
+    };
+
+    const handleMedicineRecord = async (values: FormValues, formikHelpers: FormikHelpers<FormValues>) => {
         try {
             if (!window.confirm('Are you sure?')) {
                 return;
             }
 
-            let data: MealRecordModel = {
+            let data: MedicineRecordModel = {
                 recordDateTime: new Date(`${values.date}T${values.time}`).toISOString(),
-                mealType: mealType ?? -1,
+                stomachMedicineType: stomachMedicineType ?? -1,
+                mentalMedicineType: mentalMedicineType ?? -1,
+                pillType: pillType ?? -1,
                 image: 'url'
             }
-            await trackerContainer.createOrUpdateMealRecord(new Date(`${values.date}T${values.time}`), data);
+            await trackerContainer.createOrUpdateMedicineRecord(new Date(`${values.date}T${values.time}`), data);
             props.handleComponentChanges(-1);
             formikHelpers.setSubmitting(false);
         } catch (err) {
@@ -102,7 +112,7 @@ export default ((props) => {
                 date: dateValue,
                 time: timeValue,
             }}
-            onSubmit={handleMealRecord}>
+            onSubmit={handleMedicineRecord}>
             {({ status, isSubmitting, handleSubmit }) => (
                 <form onSubmit={handleSubmit} className={classes.form} noValidate>
                     <Grid item xs={12} className={classes.root}>
@@ -114,7 +124,7 @@ export default ((props) => {
                             </Grid>
                             <Grid key={1} item>
                                 <Typography component="h1" variant="h5">
-                                    {commonContainer.t('Record Meal')}
+                                    お薬記録をつける
                                 </Typography>
                             </Grid>
                             <Grid key={2} item>
@@ -149,25 +159,50 @@ export default ((props) => {
                             <Grid key={4} item>
                                 <div className={classes.toggleContainer}>
                                     <ToggleButtonGroup
-                                        value={mealType}
+                                        value={stomachMedicineType}
                                         exclusive
-                                        onChange={handleMealType}
-                                        aria-label="mealType"
+                                        onChange={handleStomachMedicineType}
+                                        aria-label="stomach-medicine"
                                     >
-                                        <ToggleButton value={0} aria-label="breakfast">
-                                            {commonContainer.t('Breakfast')}
+                                        <ToggleButton value={0} aria-label="stomach-medicine-before">
+                                            胃薬(食前)
                                         </ToggleButton>
-                                        <ToggleButton value={1} aria-label="lunch">
-                                            {commonContainer.t('Lunch')}
+                                        <ToggleButton value={1} aria-label="stomach-medicine-after">
+                                            胃薬(食後)
                                         </ToggleButton>
-                                        <ToggleButton value={2} aria-label="snack">
-                                            {commonContainer.t('Snack')}
+                                        <ToggleButton value={2} aria-label="stomach-medicine-sleep">
+                                            胃薬(寝る前)
                                         </ToggleButton>
-                                        <ToggleButton value={3} aria-label="dinner">
-                                            {commonContainer.t('Dinner')}
+                                    </ToggleButtonGroup>
+                                </div>
+                            </Grid>
+                            <Grid key={5} item>
+                                <div className={classes.toggleContainer}>
+                                    <ToggleButtonGroup
+                                        value={mentalMedicineType}
+                                        exclusive
+                                        onChange={handleMentalMedicineType}
+                                        aria-label="stomach-medicine"
+                                    >
+                                        <ToggleButton value={10} aria-label="mental-medicine-before">
+                                            メンタル(寝る前)
                                         </ToggleButton>
-                                        <ToggleButton value={4} aria-label="drink">
-                                            {commonContainer.t('Drink')}
+                                        <ToggleButton value={11} aria-label="mental-medicine-after">
+                                            メンタル(緊急)
+                                        </ToggleButton>
+                                    </ToggleButtonGroup>
+                                </div>
+                            </Grid>
+                            <Grid key={6} item>
+                                <div className={classes.toggleContainer}>
+                                    <ToggleButtonGroup
+                                        value={pillType}
+                                        exclusive
+                                        onChange={handlePillType}
+                                        aria-label="stomach-medicine"
+                                    >
+                                        <ToggleButton value={20} aria-label="pill-medicine-before">
+                                            ピル
                                         </ToggleButton>
                                     </ToggleButtonGroup>
                                 </div>

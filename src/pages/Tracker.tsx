@@ -3,6 +3,7 @@ import TrackerMain from '../console/TrackerMain';
 import History from '../console/History'
 import SleepRecord from '../components/Inputs/SleepRecord'
 import MealRecord from '../components/Inputs/MealRecord'
+import MedicineRecord from '../components/Inputs/MedicineRecord'
 import TrackerContainer from '../containers/Tracker'
 import HistoryContainer from '../containers/History'
 
@@ -32,6 +33,9 @@ export default (() => {
             break;
         case 3:
             jsxElement = <History lastWeekSleepTimes={historyContainer.lastWeekSleepTimes} lastWeekMealTimes={historyContainer.lastWeekMealTimes} handleComponentChanges={handleComponentChanges} />
+            break;
+        case 4:
+            jsxElement = <MedicineRecord handleComponentChanges={handleComponentChanges} />
             break;
         default:
             jsxElement = <TrackerMain handleComponentChanges={handleComponentChanges} />

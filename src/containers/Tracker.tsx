@@ -3,7 +3,7 @@ import useReactRouter from 'use-react-router';
 import { createContainer } from 'unstated-next';
 import { auth, firestore, firebase } from '../firebase/config';
 import axios from 'axios';
-import { TrackerRecordModel, MealRecordModel, SleepRecordModel } from '../Models/Models'
+import { TrackerRecordModel, MealRecordModel, SleepRecordModel, MedicineRecordModel } from '../Models/Models'
 import { callNotifyMessage } from '../lib/callables';
 
 export default createContainer(() => {
@@ -12,7 +12,9 @@ export default createContainer(() => {
     const [bedTime, setBedTime] = useState<Date | undefined>(undefined);
     const [wakeUpTime, setWakeUpTime] = useState<Date | undefined>(undefined);
     const [meals, setMeals] = useState<MealRecordModel[]>([]);
+    const [medicines, setMedicines] = useState<MedicineRecordModel[]>([]);
     const [isCheckedIn, setIsCheckedIn] = useState<boolean>(false);
+    const [checkedInTime, setCheckedInTime] = useState<Date | undefined>(undefined);
 
     const createSleepRecord = async (sleepRecord: SleepRecordModel) => {
         try {
@@ -41,7 +43,7 @@ export default createContainer(() => {
                         .then(async (document) => {
                             trackerRecordData = document.data() as TrackerRecordModel;
                             if (!trackerRecordData) {
-                                await trackerRecordRef.set({ [key]: sleepRecord.recordDateTime.toISOString(), timestamp: firebase.firestore.Timestamp.now() }, { merge: true });
+                                await trackerRecordRef.set({ [key]: sleepRecord.recordDateTime.toISOString() }, { merge: true });
                             }
                             else {
                                 if (sleepRecord.recordType === 0) {
@@ -59,7 +61,9 @@ export default createContainer(() => {
                                     await trackerRecordRef
                                         .set({ 'bedTime': sleepRecord.recordDateTime.toISOString() }, { merge: true })
                                         .then(() => {
-                                            setBedTime(sleepRecord.recordDateTime);
+                                            if (sleepRecord.recordDateTime.toISOString().substr(0, 10) === new Date().toISOString().substr(0, 10)) {
+                                                setBedTime(sleepRecord.recordDateTime);
+                                            }
                                         })
                                         .catch((error) => {
                                             alert(error);
@@ -120,6 +124,46 @@ export default createContainer(() => {
         }
     };
 
+    const createOrUpdateMedicineRecord = async (recordDate: Date, data: MedicineRecordModel) => {
+        try {
+            auth.onAuthStateChanged(async user => {
+                let trackerRecordData: TrackerRecordModel | undefined = undefined;
+                if (user) {
+                    const trackerRecordRef = firestore
+                        .collection('users').doc(user.uid)
+                        .collection('trackerRecords').doc(recordDate.toISOString().substr(0, 10));
+
+                    trackerRecordRef
+                        .get()
+                        .then((document) => {
+                            trackerRecordData = document.data() as TrackerRecordModel;
+                            if (!trackerRecordData) {
+                                trackerRecordRef.set({})
+                            }
+                        })
+                        .then(() => {
+                            trackerRecordRef
+                                .update({ medicines: firebase.firestore.FieldValue.arrayUnion(data) })
+                                .then(() => {
+                                    console.log('createMedicineRecord - Added To firestore')
+                                    setMedicines([...medicines, data]);
+                                })
+                                .catch((error) => {
+                                    alert(error);
+                                });
+                        })
+                        .finally(() => {
+                            setTrackerRecord(trackerRecordData as TrackerRecordModel);
+                        })
+                }
+            })
+        } catch (err) {
+            if (err.status === 401) {
+                history.push('/login');
+            }
+        }
+    };
+
     const addPoints = async (points: number) => {
         try {
             auth.onAuthStateChanged(async user => {
@@ -134,6 +178,9 @@ export default createContainer(() => {
                         .then((document) => {
                             const userData = document.data()
                             if (userData) {
+                                let checkInTime = new Date(userData.checkInTime)
+                                console.log(checkInTime)
+
                                 if (!userData.isCheckedIn) {
                                     const trackerRecordRef = firestore
                                         .collection('users').doc(user.uid)
@@ -157,10 +204,11 @@ export default createContainer(() => {
                                                 })
                                                 .then(async () => {
                                                     await trackerRecordRef
-                                                        .update({ isCheckedIn: true, 'checkInTime': new Date().toISOString() })
+                                                        .update({ isCheckedIn: true, 'checkedInTime': new Date().toISOString() })
                                                         .then(() => {
                                                             console.log('Checked In');
                                                             setIsCheckedIn(true);
+                                                            setCheckedInTime(new Date())
                                                         })
                                                         .catch((error) => {
                                                             alert(error);
@@ -182,13 +230,13 @@ export default createContainer(() => {
         };
     };
 
-    const getTrackerRecord = async (today: Date) => {
+    const getTrackerRecord = async (selectedDate: Date) => {
         try {
             auth.onAuthStateChanged(async user => {
                 if (user) {
                     const trackerRecordRef = firestore
                         .collection('users').doc(user.uid)
-                        .collection('trackerRecords').doc(today.toISOString().substr(0, 10));
+                        .collection('trackerRecords').doc(selectedDate.toISOString().substr(0, 10));
 
                     trackerRecordRef
                         .get()
@@ -208,8 +256,15 @@ export default createContainer(() => {
                                     setMeals(sortedMeals);
                                 }
                                 if (trackerRecordData.isCheckedIn) {
-                                    setIsCheckedIn(trackerRecordData.isCheckedIn)
+                                    setIsCheckedIn(trackerRecordData.isCheckedIn);
+                                    setCheckedInTime(new Date(trackerRecordData.checkedInTime));
                                 }
+                            } else {
+                                setWakeUpTime(undefined);
+                                setBedTime(undefined);
+                                setMeals([]);
+                                setCheckedInTime(undefined);
+                                setIsCheckedIn(false)
                             }
                         })
                         .catch((error) => {
@@ -226,6 +281,6 @@ export default createContainer(() => {
 
     return {
         createSleepRecord, getTrackerRecord, trackerRecord, setTrackerRecord, wakeUpTime, bedTime,
-        createOrUpdateMealRecord, meals, isCheckedIn, addPoints
+        createOrUpdateMealRecord, meals, isCheckedIn, addPoints, checkedInTime, createOrUpdateMedicineRecord
     };
 });

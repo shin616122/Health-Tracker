@@ -8,6 +8,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import AssessmentIcon from '@material-ui/icons/Assessment';
 import ScatterPlotIcon from '@material-ui/icons/ScatterPlot';
+import DateRangeIcon from '@material-ui/icons/DateRange';
 import CommonContainer from '../containers/Common';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -58,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export default ((props: any) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
-    const [value, setValue] = useState('home');
+    const [value, setValue] = useState('tracker');
     const classes = useStyles();
     const commonContainer = CommonContainer.useContainer();
 
@@ -182,12 +183,12 @@ export default ((props: any) => {
                             <AccountCircle />
                         </IconButton>
                         <BottomNavigation value={value} onChange={handleChange} showLabels className={classes.root}>
-                            <BottomNavigationAction
+                            {/* <BottomNavigationAction
                                 component={Link}
                                 to="../pages/home"
                                 label={`${commonContainer.t('Home')}`}
                                 value="home"
-                                icon={<HomeIcon />} />
+                                icon={<HomeIcon />} /> */}
                             <BottomNavigationAction
                                 component={Link}
                                 to="../pages/bank"
@@ -206,6 +207,12 @@ export default ((props: any) => {
                                 label={`${commonContainer.t('Medicine')}`}
                                 value="medicine"
                                 icon={<ScatterPlotIcon />} /> */}
+                            <BottomNavigationAction
+                                component={Link}
+                                to="../pages/history"
+                                label={'振り返り'}
+                                value="history"
+                                icon={<DateRangeIcon />} />
                         </BottomNavigation>
                     </div>
                 </Toolbar>

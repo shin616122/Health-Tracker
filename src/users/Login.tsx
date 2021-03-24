@@ -43,7 +43,7 @@ export default ((props: any) => {
 
     useEffect(() => {
         firebase.auth().onAuthStateChanged(user => {
-            user && history.push('/pages/home');
+            user && history.push('/pages/tracker');
         });
     }, [history]);
 

@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         root: {
             // maxWidth: 345,
-            width: 200
+            width: 280
         },
     })
 );
@@ -36,7 +36,8 @@ export default ((props) => {
     const classes = useStyles();
 
     const handleCheckIn = async () => {
-        await trackerContainer.addPoints(1);
+        setSending(true);
+        await trackerContainer.addPoints(1).finally(() => setSending(false));
     }
 
     return (
@@ -50,16 +51,24 @@ export default ((props) => {
                     title="Check In Polar Bear"
                 />
             </CardActionArea>
-            <Typography style={{ color: '#000' }} variant="h6" component={'h1'}>
-                {trackerContainer.isCheckedIn ? commonContainer.t('AlreadyCheckedIn') : ''}
-            </Typography>
+            <div>
+                <Typography style={{ color: '#000', fontSize: '1em', textAlign: 'center' }}>
+                    毎日、日本時間9時にリセットします。
+                </Typography>
+                <Typography style={{ color: '#000', fontSize: '1em', textAlign: 'center' }}>
+                    {trackerContainer.isCheckedIn ? commonContainer.t('AlreadyCheckedIn') : ''}
+                    <Typography style={{ color: '#000', fontSize: '1em', textAlign: 'center' }}>
+                    </Typography>
+                    {trackerContainer.isCheckedIn ? trackerContainer.checkedInTime?.toLocaleString() : ''}
+                </Typography>
+            </div>
             <CardActions>
                 <Button
                     type="submit"
                     fullWidth
                     variant="contained"
                     color="primary"
-                    disabled={trackerContainer.isCheckedIn}
+                    disabled={trackerContainer.isCheckedIn || sending}
                     className={classes.submit}
                     onClick={handleCheckIn}
                 >

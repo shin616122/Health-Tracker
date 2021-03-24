@@ -1,10 +1,12 @@
-import { Card, CardActionArea, CardContent, CardMedia, Grid, IconButton, Typography } from '@material-ui/core';
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { Button, Card, CardActionArea, CardContent, CardMedia, CardActions, Grid, IconButton, Typography } from '@material-ui/core';
+import React, { useState} from 'react';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import CommonContainer from '../containers/Common';
+import TrackerContainer from '../containers/Tracker';
 import RefreshIcon from '@material-ui/icons/Refresh';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) =>
+createStyles({
     root: {
         paddingTop: 20,
         background: "linear-gradient(180deg, #80BED1 10%, #FFF  70%)"
@@ -12,11 +14,30 @@ const useStyles = makeStyles({
     card: {
         maxWidth: 300,
     },
-});
+    submit: {
+        margin: theme.spacing(3, 0, 2),
+        background: 'linear-gradient(55deg, #0989D9 10%, #63BDDB 70%)',
+        borderRadius: 30,
+        border: 0,
+        color: 'white',
+        height: 48,
+        padding: '0 30px',
+        boxShadow: '0 3px 5px 2px rgba(67, 120, 138, .3)',
+    }
+    })
+);
 
 export default (() => {
-    const classes = useStyles();
+    const [sending, setSending] = useState(false);
     const commonContainer = CommonContainer.useContainer();
+    const trackerContainer = TrackerContainer.useContainer();
+
+    const classes = useStyles();
+
+    const handleCheckIn = async () => {
+        setSending(true);
+        await trackerContainer.addPoints(1).finally(() => setSending(false));
+    }
 
     const handleRefresh = async () => {
         await commonContainer.loadMe();
@@ -61,6 +82,31 @@ export default (() => {
                                 </Grid>
                             </Grid>
                         </CardContent>
+
+                        <div>
+                            <Typography style={{ color: '#000', fontSize: '1em', textAlign: 'center' }}>
+                                毎日、日本時間9時にリセットします。
+                            </Typography>
+                            <Typography style={{ color: '#000', fontSize: '1em', textAlign: 'center' }}>
+                                {trackerContainer.isCheckedIn ? commonContainer.t('AlreadyCheckedIn') : ''}
+                                <Typography style={{ color: '#000', fontSize: '1em', textAlign: 'center' }}>
+                                </Typography>
+                                {trackerContainer.isCheckedIn ? trackerContainer.checkedInTime?.toLocaleString() : ''}
+                            </Typography>
+                        </div>
+                        <CardActions>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                disabled={trackerContainer.isCheckedIn || sending}
+                                className={classes.submit}
+                                onClick={handleCheckIn}
+                            >
+                                {commonContainer.t('CheckIn')}
+                            </Button>
+                        </CardActions>
                     </Card>
                 </Grid>
             </Grid >

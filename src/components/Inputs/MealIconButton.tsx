@@ -39,6 +39,7 @@ export default ((props) => {
             aria-label="food"
             className={classes.button}
             style={{ top: `calc(50% + ${props.top}px)`, left: `calc(50% + ${props.left}px)` }}
+            onClick={() => console.log('Clicked!')}
         >
             <RestaurantIcon fontSize="large" />
         </IconButton>

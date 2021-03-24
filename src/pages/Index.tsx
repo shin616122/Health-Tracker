@@ -6,6 +6,7 @@ import Home from './Home';
 import Bank from './Bank';
 import Tracker from './Tracker';
 import Medicine from './Medicine';
+import History from './History';
 import Profile from './Profile'
 import Layout from '../layout/Root';
 import TrackerContainer from '../containers/Tracker'
@@ -26,6 +27,7 @@ export default (() => {
                         <Route path={`${match.url}/tracker`} component={Tracker} />
                         <Route path={`${match.url}/medicine`} component={Medicine} />
                         <Route path={`${match.url}/profile`} component={Profile} />
+                        <Route path={`${match.url}/history`} component={History} />
                     </Switch>
                 </Authorize>
             </HistoryContainer.Provider>

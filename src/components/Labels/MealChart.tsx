@@ -32,6 +32,8 @@ export default ((props) => {
 
     const classes = useStyles(props);
 
+    console.log(props.lastWeekMealTimes)
+
     const formatDate = (x: string) => {
         let formattedDate = '今日';
         let today = new Date().toLocaleDateString('sv-SE')
@@ -66,8 +68,9 @@ export default ((props) => {
                         <YAxis domain={[0, 24]} ticks={[0, 3, 6, 9, 12, 15, 18, 21, 24]} unit="時" />
                         <Tooltip />
                         <Legend />
-                        <Line type="monotone" dataKey="wakeUpTime" stroke="#8884d8" activeDot={{ r: 8 }} />
-                        <Line type="monotone" dataKey="bedTime" stroke="#82ca9d" />
+                        <Line type="monotone" dataKey="breakfastTime" stroke="#8884d8" activeDot={{ r: 8 }} />
+                        <Line type="monotone" dataKey="lunchTime" stroke="#82ca9d" />
+                        <Line type="monotone" dataKey="dinnerTime" stroke="#6f32a8" />
                     </LineChart>
                 </Grid>
             </Grid>

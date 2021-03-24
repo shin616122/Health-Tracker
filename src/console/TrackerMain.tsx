@@ -8,9 +8,11 @@ import DateTimeLabel from '../components/Labels/DateTimeLabel'
 import SleepButton from '../components/Inputs/SleepButton';
 import MealLabel from '../components/Labels/MealLabel';
 import MealIconButton from '../components/Inputs/MealIconButton'
+import ControlPointIcon from '@material-ui/icons/ControlPoint';
 import TimelineIcon from '@material-ui/icons/Timeline';
 import { Stage, Graphics, Text } from '@inlet/react-pixi';
 import * as PIXI from 'pixi.js';
+import MealTable from '../components/Labels/MealTable';
 
 interface Props {
     handleComponentChanges: (componentId: number) => void,
@@ -173,47 +175,23 @@ export default ((props) => {
         return () => clearInterval(id);
     }, []);
 
-    const createGradient = (from: string, to: string, width: number, height: number) => {
-        const c: HTMLCanvasElement = document.createElement("canvas");
-        c.width = width
-        c.height = height
-        const ctx = c.getContext("2d");
-        if (ctx) {
-            const grd = ctx && ctx.createLinearGradient(0, 0, width, height);
-            grd.addColorStop(0, from);
-            grd.addColorStop(1, to);
-            ctx.fillStyle = grd;
-            ctx.fillRect(0, 0, width, height);
-        }
+    // const createGradient = (from: string, to: string, width: number, height: number) => {
+    //     const c: HTMLCanvasElement = document.createElement("canvas");
+    //     c.width = width
+    //     c.height = height
+    //     const ctx = c.getContext("2d");
+    //     if (ctx) {
+    //         const grd = ctx && ctx.createLinearGradient(0, 0, width, height);
+    //         grd.addColorStop(0, from);
+    //         grd.addColorStop(1, to);
+    //         ctx.fillStyle = grd;
+    //         ctx.fillRect(0, 0, width, height);
+    //     }
 
-        return PIXI.Texture.from(c) as any;
-    }
+    //     return PIXI.Texture.from(c) as any;
+    // }
 
-    const gradient = createGradient('#acb6e5', '#86fde8', 300, 300)
-
-    const getMealTypeName = (meanType: number) => {
-        let mealTypeName = '';
-        switch (meanType) {
-            case 0:
-                mealTypeName = commonContainer.t('Breakfast');
-                break;
-            case 1:
-                mealTypeName = commonContainer.t('Lunch');
-                break;
-            case 2:
-                mealTypeName = commonContainer.t('Snack');
-                break;
-            case 3:
-                mealTypeName = commonContainer.t('Dinner');
-                break;
-            case 4:
-                mealTypeName = commonContainer.t('Drink');
-                break;
-            default:
-                break;
-        }
-        return mealTypeName;
-    }
+    // const gradient = createGradient('#acb6e5', '#86fde8', 300, 300)
 
     return (
         <Grid item xs={12} className={classes.root}>
@@ -246,24 +224,7 @@ export default ((props) => {
                         <Text x={120} y={120} style={{ color: '#5998AB' }} text={dateTime.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit', hour12: false })} />
                         <Text x={80} y={150} style={{ color: '#5998AB' }} text={dateTime.toLocaleDateString('ja-JP', { year: "numeric", month: "long", day: "numeric" })} />
                     </Stage> */}
-                    <TableContainer component={Paper}>
-                        <Table className={classes.table} aria-label="simple table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>RecordDateTime</TableCell>
-                                    <TableCell align="right">MealType</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {trackerContainer.meals.map((meal, index) => (
-                                    <TableRow key={index}>
-                                        <TableCell component="th" scope="row">{new Date(meal.recordDateTime).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit', hour12: false })}</TableCell>
-                                        <TableCell align="right">{getMealTypeName(meal.mealType)}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                    <MealTable />
                 </Grid>
                 <Grid key={2} item>
                     <Grid container justify="center" direction="row" alignItems="center" spacing={2}>
@@ -276,12 +237,12 @@ export default ((props) => {
                                     <IconButton
                                         aria-label={'History'}
                                         className={classes.historyButton}
-                                        onClick={() => props.handleComponentChanges(3)}
+                                        onClick={() => props.handleComponentChanges(4)}
                                     >
                                         <div>
-                                            <TimelineIcon fontSize="large" style={{ color: '#5998AB' }} />
+                                            <ControlPointIcon fontSize="large" style={{ color: '#5998AB' }} />
                                             <Typography style={{ fontSize: '0.6em', color: '#5998AB' }} variant="body1" component={'p'}>
-                                                {commonContainer.t('History')}
+                                                お薬
                                             </Typography>
                                         </div>
                                     </IconButton>
