@@ -132,7 +132,7 @@ export default ((props) => {
             <Grid container justify="center" direction="column" alignItems="center" spacing={2}>
                 <Grid key={0} item>
                     <Typography variant="h6" component={'h1'} style={{ paddingTop: '10px', color: 'white' }}>
-                        {commonContainer.t('Chuma Tracker')}
+                        {commonContainer.t('Health Tracker')}
                     </Typography>
                 </Grid>
                 <Grid key={1} item>

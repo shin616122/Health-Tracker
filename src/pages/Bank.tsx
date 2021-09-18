@@ -1,29 +1,29 @@
 import { Button, Card, CardActionArea, CardContent, CardMedia, CardActions, Grid, IconButton, Typography } from '@material-ui/core';
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import CommonContainer from '../containers/Common';
 import TrackerContainer from '../containers/Tracker';
 import RefreshIcon from '@material-ui/icons/Refresh';
 
 const useStyles = makeStyles((theme: Theme) =>
-createStyles({
-    root: {
-        paddingTop: 20,
-        background: "linear-gradient(180deg, #80BED1 10%, #FFF  70%)"
-    },
-    card: {
-        maxWidth: 300,
-    },
-    submit: {
-        margin: theme.spacing(3, 0, 2),
-        background: 'linear-gradient(55deg, #0989D9 10%, #63BDDB 70%)',
-        borderRadius: 30,
-        border: 0,
-        color: 'white',
-        height: 48,
-        padding: '0 30px',
-        boxShadow: '0 3px 5px 2px rgba(67, 120, 138, .3)',
-    }
+    createStyles({
+        root: {
+            paddingTop: 20,
+            background: "linear-gradient(180deg, #80BED1 10%, #FFF  70%)"
+        },
+        card: {
+            maxWidth: 300,
+        },
+        submit: {
+            margin: theme.spacing(3, 0, 2),
+            background: 'linear-gradient(55deg, #0989D9 10%, #63BDDB 70%)',
+            borderRadius: 30,
+            border: 0,
+            color: 'white',
+            height: 48,
+            padding: '0 30px',
+            boxShadow: '0 3px 5px 2px rgba(67, 120, 138, .3)',
+        }
     })
 );
 
@@ -60,13 +60,13 @@ export default (() => {
                         <CardContent>
                             <Grid container justify="center" alignItems="center">
                                 <Typography variant="h5" component="h2">
-                                    {commonContainer.user && `${commonContainer.user.fullName}${commonContainer.t('\'s Chuma Bank!')}`}
+                                    {commonContainer.user && `${commonContainer.user.fullName}${commonContainer.t('\'s Healthy Point\'s Bank!')}`}
                                 </Typography>
                             </Grid>
                             <Grid container justify="center" direction="row" alignItems="center" spacing={2}>
                                 <Grid key={0} item>
                                     <Typography variant="body2" color="textSecondary" component="p">
-                                        {commonContainer.user && `${commonContainer.user.chumaPoints} ${commonContainer.t('Chuma Points!')}`}
+                                        {commonContainer.user && `${commonContainer.user.healthTrackerPoints} ${commonContainer.t('Healthy Points!')}`}
                                     </Typography>
                                 </Grid>
                                 <Grid key={1} item>

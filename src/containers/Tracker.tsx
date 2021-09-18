@@ -168,7 +168,7 @@ export default createContainer(() => {
         try {
             auth.onAuthStateChanged(async user => {
                 let trackerRecordData: TrackerRecordModel | undefined = undefined;
-                let chumaPoints = 0;
+                let healthTrackerPoints = 0;
 
                 if (user) {
                     const usersRef = firestore.collection('users');
@@ -186,13 +186,13 @@ export default createContainer(() => {
                                         .collection('users').doc(user.uid)
                                         .collection('trackerRecords').doc(new Date().toISOString().substr(0, 10));
 
-                                    chumaPoints = Number(userData.chumaPoints) + points;
+                                    healthTrackerPoints = Number(userData.healthTrackerPoints) + points;
 
                                     usersRef
                                         .doc(user.uid)
-                                        .update({ chumaPoints })
+                                        .update({ healthTrackerPoints })
                                         .then(() => {
-                                            console.log('Updated Chuma Points')
+                                            console.log('Updated Points')
 
                                             trackerRecordRef
                                                 .get()

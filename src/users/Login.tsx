@@ -117,7 +117,7 @@ export default ((props: any) => {
                     </div>
                     <Box mt={8}>
                         <Typography variant="body2" color="textSecondary" align="center">
-                            {`Copyright © Chuma`}
+                            {`Copyright © Health Tracker`}
                             {new Date().getFullYear()}
                             {`.`}
                         </Typography>

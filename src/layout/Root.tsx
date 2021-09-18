@@ -146,7 +146,7 @@ export default ((props: any) => {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" noWrap>
-                        {commonContainer.t('CHUMA')}
+                        {commonContainer.t('Health Tracker')}
                     </Typography>
                     <div className={classes.grow} />
                     <NativeSelect

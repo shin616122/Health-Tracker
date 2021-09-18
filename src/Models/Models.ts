@@ -30,7 +30,7 @@ export interface UserModel {
     uid: string;
     fullName: string;
     email: string;
-    chumaPoints: number;
+    healthTrackerPoints: number;
 }
 
 export interface LoginFormModel {

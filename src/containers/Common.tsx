@@ -8,14 +8,12 @@ import { UserModel } from '../Models/Models'
 
 import enJson from '../locales/en.json';
 import jaJson from '../locales/ja.json';
-import cmJson from '../locales/cm.json'
 
 i18n.use(initReactI18next).init({
     debug: true,
     resources: {
         en: { translation: enJson },
         ja: { translation: jaJson },
-        cm: { translation: cmJson },
     },
     lng: 'ja',
     fallbackLng: false,
@@ -97,7 +95,7 @@ export default createContainer(() => {
                             id: uid,
                             email,
                             fullName,
-                            chumaPoints: 0,
+                            healthTrackerPoints: 0,
                         };
                         const usersRef = firestore.collection('users')
                         usersRef

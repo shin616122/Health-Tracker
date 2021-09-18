@@ -35,7 +35,7 @@ export default (() => {
                 </Grid>
                 <Grid key={1} item>
                     <Typography component={'h4'} style={{ color: 'white' }}>
-                        {commonContainer.t('Welcome！Chuma App!')}
+                        {commonContainer.t('Welcome！Health Tracking App!')}
                     </Typography>
                 </Grid>
                 <Grid key={2} item>
